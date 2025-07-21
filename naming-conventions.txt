@@ -1,0 +1,15 @@
+Folders -> lowercase-hyphens
+Component Files -> PascalCase
+API/helpers -> kebab-case
+
+src/
+├── components/
+│   ├── Navbar.tsx
+│   ├── RecipeCard.tsx
+├── views/
+│   ├── RecipesView.tsx
+│   ├── RecipeDetailViewtsx
+├── api/
+│   └── recipes-api.ts
+├── App.tsx
+├── main.tsx

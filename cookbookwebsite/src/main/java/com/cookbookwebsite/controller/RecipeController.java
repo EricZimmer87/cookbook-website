@@ -1,5 +1,6 @@
 package com.cookbookwebsite.controller;
 
+import com.cookbookwebsite.dto.recipe.RecipeDTO;
 import com.cookbookwebsite.model.Recipe;
 import com.cookbookwebsite.service.RecipeService;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,13 @@ public class RecipeController {
     }
 
     @GetMapping
-    public List<Recipe> getAllRecipes() {
-        return recipeService.getAllRecipes();
+    public List<RecipeDTO> getAllRecipeDTOs() {
+        return recipeService.getAllRecipeDTOs();
+    }
+
+    @GetMapping("/{id}")
+    public RecipeDTO getRecipeById(@PathVariable Integer id) {
+        return recipeService.getRecipeById(id);
     }
 
     @PostMapping
