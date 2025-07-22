@@ -1,39 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-import type {RecipeDTO} from "../../types/recipe.ts";
+import { useFetch } from '../../api/useFetch.ts';
+import RecipeCard from '../../components/recipe-card';
+import type { RecipeDTO } from '../../types/recipe.ts';
 
 function RecipesView() {
-    const [recipes, setRecipes] = useState<RecipeDTO[]>([]);
+  const { data: recipes, loading, error } = useFetch<RecipeDTO[]>('/api/recipes');
 
-    useEffect(() => {
-        fetch("http://localhost:8080/api/recipes")
-            .then((response) => response.json())
-            .then((data: RecipeDTO[]) => setRecipes(data))
-            .catch((error) => console.error("Error fetching recipes:", error));
-    }, []);
+  if (loading) {
+    return <p>Loading recipes...</p>;
+  }
 
-    return (
-        <div>
-            <h1>All Recipes</h1>
-            <ul>
-                {recipes.map((recipe) => (
-                    <li key={recipe.recipeId}>
-                        <Link to={`/recipes/${recipe.recipeId}`}>
-                            <h3>{recipe.recipeName}</h3>
-                        </Link>
-                        <ul>
-                            {recipe.recipeIngredients.map((ingredient) => (
-                                <li key={ingredient.ingredientId}>
-                                    {ingredient.quantity} {ingredient.unit} {ingredient.ingredientName}
-                                </li>
-                            ))}
-                        </ul>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  if (error) {
+    return <p style={{ color: 'red' }}>Error: {error}</p>;
+  }
+
+  return (
+    <div>
+      <h1>All Recipes</h1>
+      {recipes?.map((recipe) => (
+        <RecipeCard key={recipe.recipeId} recipe={recipe} clickable={true} showReviews={false} />
+      ))}
+    </div>
+  );
 }
 
 export default RecipesView;

@@ -13,3 +13,9 @@ src/
 │   └── recipes-api.ts
 ├── App.tsx
 ├── main.tsx
+
+
+{
+  "userEmail": "eric@example.com",
+  "password": "supersecure123"
+}
