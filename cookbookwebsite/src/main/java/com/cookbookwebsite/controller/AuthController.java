@@ -1,7 +1,9 @@
 package com.cookbookwebsite.controller;
 
 import com.cookbookwebsite.dto.auth.LoginRequest;
+import com.cookbookwebsite.dto.auth.LoginResponse;
 import com.cookbookwebsite.dto.auth.RegisterRequest;
+import com.cookbookwebsite.dto.user.UserDTO;
 import com.cookbookwebsite.model.Role;
 import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RoleRepository;
@@ -9,6 +11,9 @@ import com.cookbookwebsite.repository.UserRepository;
 import com.cookbookwebsite.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -51,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public LoginResponse login(@RequestBody LoginRequest request) {
         User user = userRepository.findByUserEmail(request.getUserEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password."));
 
@@ -60,6 +65,8 @@ public class AuthController {
         }
 
         String token = jwtService.generateToken(user.getUserEmail());
-        return token;
+        UserDTO userDTO = new UserDTO(user);
+
+        return new LoginResponse(userDTO, token);
     }
 }

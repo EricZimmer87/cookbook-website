@@ -5,11 +5,17 @@ import RecipeDetailView from './views/recipes/RecipeDetailView';
 import LoginView from './views/auth/LoginView';
 import RegisterView from './views/auth/RegisterView';
 import UsersView from './views/users/UsersView';
+import UserDetailView from './views/users/UserDetailView.tsx';
+import UserEditView from './views/users/UserEditView.tsx';
+import UserDeleteView from './views/users/UserDeleteView.tsx';
+import { Toaster } from 'react-hot-toast';
+import UserProfileView from './views/users/UserProfileView.tsx';
+import ReviewEditView from './views/reviews/ReviewEditView';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />, // 🪄 Navbar is here
+    element: <Layout />, // Navbar is here
     children: [
       { index: true, element: <h1>Home Page</h1> },
       { path: 'recipes', element: <RecipesView /> },
@@ -17,12 +23,22 @@ const router = createBrowserRouter([
       { path: 'login', element: <LoginView /> },
       { path: 'register', element: <RegisterView /> },
       { path: 'users', element: <UsersView /> },
+      { path: '/users/:id', element: <UserDetailView /> },
+      { path: '/users/:id/edit', element: <UserEditView /> },
+      { path: '/users/:id/delete', element: <UserDeleteView /> },
+      { path: '/users/:id/profile', element: <UserProfileView /> },
+      { path: '/reviews/:id/edit', element: <ReviewEditView /> },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Toaster position="top-right" />
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

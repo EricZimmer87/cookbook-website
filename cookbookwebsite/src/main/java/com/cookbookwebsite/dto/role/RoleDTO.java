@@ -15,7 +15,7 @@ public class RoleDTO {
         return roleId;
     }
 
-    public String getRolename() {
+    public String getRoleName() {
         return roleName;
     }
 }

@@ -23,13 +23,13 @@ public class UserFavoriteController {
 
     // GET /api/user-favorites/recipe/{recipeId}
     @GetMapping("/recipe/{recipeId}")
-    public List<UserFavoriteDTO> getFavoritesByrecipeId(@PathVariable Integer recipeId) {
+    public List<UserFavoriteDTO> getFavoritesByRecipeId(@PathVariable Integer recipeId) {
         return userFavoriteService.getFavoritesByRecipeId(recipeId);
     }
 
     // POST /api/user-favorites
     @PostMapping
-    public UserFavorite createUserFavoriet(@RequestBody UserFavorite userFavorite) {
+    public UserFavorite createUserFavorite(@RequestBody UserFavorite userFavorite) {
         return userFavoriteService.createUserFavorite(userFavorite);
     }
 }

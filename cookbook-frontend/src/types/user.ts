@@ -6,6 +6,6 @@ export interface RoleDTO {
 export interface UserDTO {
   userId: number;
   userName: string;
-  email: string;
+  userEmail: string;
   role: RoleDTO;
 }

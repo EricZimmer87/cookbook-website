@@ -9,4 +9,6 @@ public interface ReviewService {
     List<ReviewDTO> getReviewsByUserId(Integer userId);
     List<ReviewDTO> getReviewsByRecipeId(Integer recipeId);
     Review createReview(Review review);
+    ReviewDTO getReviewById(Integer reviewId);
+    Review updateReview(Integer reviewId, Review updatedReview);
 }

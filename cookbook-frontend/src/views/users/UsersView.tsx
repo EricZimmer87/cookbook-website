@@ -1,7 +1,11 @@
 import { useFetch } from '../../api/useFetch';
+import { Link, useNavigate } from 'react-router-dom';
 import type { UserDTO } from '../../types/user';
+import EditButton from '../../components/buttons/EditButton.tsx';
+import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 
 function UsersView() {
+  const navigate = useNavigate();
   const { data: users, loading, error } = useFetch<UserDTO[]>('/api/users');
 
   if (loading) return <p>Loading users...</p>;
@@ -18,15 +22,22 @@ function UsersView() {
             <th>Username</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
             <tr key={user.userId}>
               <td>{user.userId}</td>
-              <td>{user.userName}</td>
-              <td>{user.email}</td>
+              <td>
+                <Link to={`/users/${user.userId}`}>{user.userName}</Link>
+              </td>
+              <td>{user.userEmail}</td>
               <td>{user.role.roleName}</td>
+              <td>
+                <EditButton onClick={() => navigate(`/users/${user.userId}/edit`)} />
+                <DeleteButton onClick={() => navigate(`/users/${user.userId}/delete`)} />
+              </td>
             </tr>
           ))}
         </tbody>

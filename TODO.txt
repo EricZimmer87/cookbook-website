@@ -1,0 +1,4 @@
+# TODOs
+
+  - [ ] Add/Remove User Favorites
+  - [ ] Add/Remove User Notes

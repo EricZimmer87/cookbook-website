@@ -26,7 +26,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public UserDTO getUserById(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return new UserDTO(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserEntityById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
     public User createUser(User user) {
         return userRepository.save(user);
+    }
+
+
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
     }
 }

@@ -34,6 +34,27 @@ public class ReviewServiceImpl implements ReviewService {
                 .toList();
     }
 
+    // Get a single review by review ID
+    @Override
+    @Transactional(readOnly = true)
+    public ReviewDTO getReviewById(Integer reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review not found."));
+        return new ReviewDTO(review);
+    }
+
+    // PUT update a review
+    @Override
+    public Review updateReview(Integer reviewId, Review updatedReview) {
+        Review existing = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review not found."));
+
+        existing.setScore(updatedReview.getScore());
+        existing.setReviewText(updatedReview.getReviewText());
+
+        return reviewRepository.save(existing);
+    }
+
     @Override
     public Review createReview(Review review) {
         return reviewRepository.save(review);

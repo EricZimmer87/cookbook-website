@@ -34,6 +34,15 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<RecipeDTO> getRecipesByUserId(Integer userId) {
+        return recipeRepository.findByUserUserId(userId)
+                .stream()
+                .map(RecipeDTO::new)
+                .toList();
+    }
+
+    @Override
     public Recipe createRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);
     }

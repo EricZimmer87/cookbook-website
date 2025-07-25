@@ -11,25 +11,26 @@ export function useFetch<T>(url: string) {
   useEffect(() => {
     const controller = new AbortController();
 
-    async function fetchData() {
-      try {
-        setLoading(true);
-        setError(null);
+    (async () => {
+      setLoading(true);
+      setError(null);
 
+      try {
         const response = await fetch(url, {
           signal: controller.signal,
           headers: {
             'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}), // Add JWT if logged in
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const json = await response.json();
-        setData(json);
+
+        if (!response.ok) {
+          setError(`HTTP error! status: ${response.status}`);
+        } else {
+          setData(json);
+        }
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
           console.error('Fetch error:', err);
@@ -38,12 +39,10 @@ export function useFetch<T>(url: string) {
       } finally {
         setLoading(false);
       }
-    }
-
-    fetchData();
+    })();
 
     return () => controller.abort();
-  }, [url, token]); // Re-fetch if token changes
+  }, [url, token]);
 
   return { data, loading, error };
 }

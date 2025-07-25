@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/buttons/Button.tsx';
 
 function RegisterView() {
   const [userName, setUserName] = useState('');
@@ -37,8 +38,8 @@ function RegisterView() {
   return (
     <div>
       <h1>Create Account</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label>Username:</label>
           <input
             type="text"
@@ -47,7 +48,7 @@ function RegisterView() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Email:</label>
           <input
             type="email"
@@ -56,7 +57,7 @@ function RegisterView() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Password:</label>
           <input
             type="password"
@@ -65,7 +66,9 @@ function RegisterView() {
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <Button type="submit" className="button-blue">
+          Register
+        </Button>
       </form>
       {message && <p>{message}</p>}
     </div>

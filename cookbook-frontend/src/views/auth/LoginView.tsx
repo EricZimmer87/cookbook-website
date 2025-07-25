@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth.ts';
+import Button from '../../components/buttons/Button.tsx';
 
 function LoginView() {
   const [email, setEmail] = useState('');
@@ -12,21 +13,20 @@ function LoginView() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userEmail: email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        console.error('Login failed');
+        alert('Invalid login');
+        return;
       }
 
-      const token = await response.text();
-
-      // Get username for display (this assumes you know it)
-      const username = email.split('@')[0]; // <-- TEMP, replace later with actual username from backend
-      login(username, token);
+      const { user, token } = await response.json();
+      login(user, token);
 
       navigate('/'); // redirect to home
     } catch (err) {
@@ -36,13 +36,13 @@ function LoginView() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="form" onSubmit={handleSubmit}>
       <h2>Login</h2>
-      <div>
+      <div className="form-group">
         <label>Email:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
-      <div>
+      <div className="form-group">
         <label>Password:</label>
         <input
           type="password"
@@ -51,7 +51,9 @@ function LoginView() {
           required
         />
       </div>
-      <button type="submit">Login</button>
+      <Button type="submit" className="button-blue">
+        Login
+      </Button>
     </form>
   );
 }
