@@ -11,6 +11,10 @@ import UserDeleteView from './views/users/UserDeleteView.tsx';
 import { Toaster } from 'react-hot-toast';
 import UserProfileView from './views/users/UserProfileView.tsx';
 import ReviewEditView from './views/reviews/ReviewEditView';
+import TagsView from './views/tags/TagsView.tsx';
+import TagEditView from './views/tags/TagEditView.tsx';
+import TagCreateView from './views/tags/TagCreateView.tsx';
+import TagDeleteView from './views/tags/TagDeleteView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +32,10 @@ const router = createBrowserRouter([
       { path: '/users/:id/delete', element: <UserDeleteView /> },
       { path: '/users/:id/profile', element: <UserProfileView /> },
       { path: '/reviews/:id/edit', element: <ReviewEditView /> },
+      { path: '/tags', element: <TagsView /> },
+      { path: '/tags/new', element: <TagCreateView /> },
+      { path: '/tags/:id/edit', element: <TagEditView /> },
+      { path: '/tags/:id/delete', element: <TagDeleteView /> },
     ],
   },
 ]);

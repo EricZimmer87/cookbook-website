@@ -27,6 +27,11 @@ function Navbar() {
         <Link to="/recipes" className="navbar-link">
           Recipes
         </Link>
+        <Link to="/tags" className="navbar-link">
+          Tags
+        </Link>
+
+        {/* USER LOGIN */}
         {user ? (
           <div className="navbar-dropdown">
             <Button className="navbar-dropdown-link" onClick={() => setIsOpen((prev) => !prev)}>

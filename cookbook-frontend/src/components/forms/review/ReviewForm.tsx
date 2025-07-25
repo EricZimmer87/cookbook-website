@@ -21,7 +21,9 @@ function ReviewForm({ defaultValues = {}, onSubmit }: ReviewFormProps) {
   });
 
   useEffect(() => {
-    reset(defaultValues);
+    if (defaultValues && Object.keys(defaultValues).length > 0) {
+      reset(defaultValues);
+    }
   }, [defaultValues, reset]);
 
   const navigate = useNavigate();

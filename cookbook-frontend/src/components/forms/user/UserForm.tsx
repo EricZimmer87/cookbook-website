@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form';
 import type { RoleDTO, UserDTO } from '../../../types/user';
-import { useNavigate } from 'react-router-dom';
-import Button from '../../buttons/Button.tsx';
 import SaveButton from '../../buttons/SaveButton.tsx';
 import { useEffect } from 'react';
+import CancelButton from '../../buttons/CancelButton.tsx';
 
 type UserFormProps = {
   defaultValues?: Partial<UserDTO>; // pre-fill for edit
@@ -24,12 +23,6 @@ function UserForm({ defaultValues = {}, onSubmit, roles }: UserFormProps) {
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
-
-  const navigate = useNavigate();
-
-  const handleCancel = () => {
-    navigate(-1);
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
@@ -73,9 +66,7 @@ function UserForm({ defaultValues = {}, onSubmit, roles }: UserFormProps) {
       </div>
 
       <SaveButton type="submit" />
-      <Button className="button" onClick={handleCancel}>
-        Cancel
-      </Button>
+      <CancelButton />
     </form>
   );
 }

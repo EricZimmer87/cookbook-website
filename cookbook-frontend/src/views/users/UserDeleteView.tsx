@@ -4,7 +4,7 @@ import { useFetch } from '../../api/useFetch';
 import type { UserDTO } from '../../types/user';
 import toast from 'react-hot-toast';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
-import Button from '../../components/buttons/Button.tsx';
+import CancelButton from '../../components/buttons/CancelButton.tsx';
 
 function UserDeleteView() {
   const { id } = useParams<{ id: string }>();
@@ -26,10 +26,6 @@ function UserDeleteView() {
     }
   };
 
-  const handleCancel = () => {
-    navigate('/users'); // go back without deleting
-  };
-
   return (
     <div>
       <h1>Confirm Delete</h1>
@@ -38,7 +34,7 @@ function UserDeleteView() {
       </p>
       <div style={{ marginTop: '1rem' }}>
         <DeleteButton onClick={handleDelete} />
-        <Button onClick={handleCancel}>Cancel</Button>
+        <CancelButton />
       </div>
     </div>
   );
