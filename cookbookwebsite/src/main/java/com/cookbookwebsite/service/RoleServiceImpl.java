@@ -16,6 +16,7 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
+    // Get all roles
     @Override
     @Transactional(readOnly = true)
     public List<RoleDTO> getAllRoleDTOs() {
@@ -25,7 +26,9 @@ public class RoleServiceImpl implements RoleService {
                 .toList();
     }
 
+    // Create role
     @Override
+    @Transactional
     public Role createRole(Role role) {
         return roleRepository.save(role);
     }

@@ -16,6 +16,7 @@ public class DifficultyLevelServiceImpl implements DifficultyLevelService {
         this.difficultyLevelRepository = difficultyLevelRepository;
     }
 
+    // Get all difficutly levels
     @Override
     @Transactional(readOnly = true)
     public List<DifficultyLevelDTO> getAllDifficultyLevelDTOs() {
@@ -25,7 +26,9 @@ public class DifficultyLevelServiceImpl implements DifficultyLevelService {
                 .toList();
     }
 
+    // Create difficulty level
     @Override
+    @Transactional
     public DifficultyLevel createDifficultyLevel(DifficultyLevel difficultyLevel) {
         return difficultyLevelRepository.save(difficultyLevel);
     }

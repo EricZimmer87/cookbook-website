@@ -46,12 +46,14 @@ public class TagServiceImpl implements TagService {
 
     // Update tag
     @Override
+    @Transactional
     public Tag saveTag(Tag tag) {
         return tagRepository.save(tag);
     }
 
     // Create tag
     @Override
+    @Transactional
     public Tag createTag(Tag tag) {
         return tagRepository.save(tag);
     }

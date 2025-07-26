@@ -16,6 +16,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeRepository = recipeRepository;
     }
 
+    // Get all recipes
     @Override
     @Transactional(readOnly = true)
     public List<RecipeDTO> getAllRecipeDTOs() {
@@ -25,6 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
                 .toList();
     }
 
+    // Get recipe by ID
     @Override
     @Transactional(readOnly = true)
     public RecipeDTO getRecipeById(Integer id) {
@@ -33,6 +35,7 @@ public class RecipeServiceImpl implements RecipeService {
         return new RecipeDTO(recipe);
     }
 
+    // Get recipes by user ID
     @Override
     @Transactional(readOnly = true)
     public List<RecipeDTO> getRecipesByUserId(Integer userId) {
@@ -42,7 +45,9 @@ public class RecipeServiceImpl implements RecipeService {
                 .toList();
     }
 
+    // Create recipe
     @Override
+    @Transactional
     public Recipe createRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);
     }

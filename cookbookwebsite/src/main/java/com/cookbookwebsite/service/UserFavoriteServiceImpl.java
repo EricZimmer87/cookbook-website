@@ -16,6 +16,7 @@ public class UserFavoriteServiceImpl implements UserFavoriteService {
         this.userFavoriteRepository = userFavoriteRepository;
     }
 
+    // Get favorites by user ID
     @Override
     @Transactional(readOnly = true)
     public List<UserFavoriteDTO> getFavoritesByUserId(Integer userId) {
@@ -25,6 +26,7 @@ public class UserFavoriteServiceImpl implements UserFavoriteService {
                 .toList();
     }
 
+    // Get favorites by recipe ID
     @Override
     @Transactional(readOnly = true)
     public List<UserFavoriteDTO> getFavoritesByRecipeId(Integer recipeId) {
@@ -34,7 +36,9 @@ public class UserFavoriteServiceImpl implements UserFavoriteService {
                 .toList();
     }
 
+    // Create user favorite
     @Override
+    @Transactional
     public UserFavorite createUserFavorite(UserFavorite userFavorite) {
         return userFavoriteRepository.save(userFavorite);
     }

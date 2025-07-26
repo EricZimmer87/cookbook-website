@@ -16,6 +16,7 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    // Get all categories
     @Override
     @Transactional
     public List<CategoryDTO> getAllCategoryDTOs() {
@@ -25,7 +26,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .toList();
     }
 
+    // Create category
     @Override
+    @Transactional
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
     }

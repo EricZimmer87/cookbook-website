@@ -16,6 +16,7 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientRepository= ingredientRepository;
     }
 
+    // Get all ingredients
     @Override
     @Transactional(readOnly = true)
     public List<IngredientDTO> getAllIngredientDTOs() {
@@ -25,7 +26,9 @@ public class IngredientServiceImpl implements IngredientService {
                 .toList();
     }
 
+    // Create ingredient
     @Override
+    @Transactional
     public Ingredient createIngredient(Ingredient ingredient) {
         return ingredientRepository.save(ingredient);
     }

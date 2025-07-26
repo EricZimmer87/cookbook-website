@@ -16,6 +16,7 @@ public class ReviewServiceImpl implements ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
+    // Get reviews by user ID
     @Override
     @Transactional(readOnly = true)
     public List<ReviewDTO> getReviewsByUserId(Integer userId) {
@@ -25,6 +26,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .toList();
     }
 
+    // Get reviews by recipe ID
     @Override
     @Transactional(readOnly = true)
     public List<ReviewDTO> getReviewsByRecipeId(Integer recipeId) {
@@ -45,6 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     // PUT update a review
     @Override
+    @Transactional
     public Review updateReview(Integer reviewId, Review updatedReview) {
         Review existing = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found."));
@@ -55,7 +58,9 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.save(existing);
     }
 
+    // Create a review
     @Override
+    @Transactional
     public Review createReview(Review review) {
         return reviewRepository.save(review);
     }

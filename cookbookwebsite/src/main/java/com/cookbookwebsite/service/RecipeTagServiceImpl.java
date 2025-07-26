@@ -16,6 +16,7 @@ public class RecipeTagServiceImpl implements RecipeTagService {
         this.recipeTagRepository = recipeTagRepository;
     }
 
+    // Get all recipe tags
     @Override
     @Transactional(readOnly = true)
     public List<RecipeTagDTO> getAllRecipeTagDTOs() {
@@ -25,7 +26,9 @@ public class RecipeTagServiceImpl implements RecipeTagService {
                 .toList();
     }
 
+    // Create recipe tag
     @Override
+    @Transactional
     public RecipeTag createRecipeTag(RecipeTag recipeTag) {
         return recipeTagRepository.save(recipeTag);
     }

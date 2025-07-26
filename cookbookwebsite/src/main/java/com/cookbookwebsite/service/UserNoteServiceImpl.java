@@ -16,6 +16,7 @@ public class UserNoteServiceImpl implements UserNoteService {
         this.userNoteRepository = userNoteRepository;
     }
 
+    // Get notes by user ID
     @Override
     @Transactional(readOnly = true)
     public List<UserNoteDTO> getNotesByUserId(Integer userId) {
@@ -26,6 +27,7 @@ public class UserNoteServiceImpl implements UserNoteService {
             .toList();
     }
 
+    // Get notes by recipe ID
     @Override
     @Transactional(readOnly = true)
     public List<UserNoteDTO> getNotesByRecipeId(Integer recipeId) {
@@ -36,7 +38,9 @@ public class UserNoteServiceImpl implements UserNoteService {
             .toList();
     }
 
+    // Create a user note
     @Override
+    @Transactional
     public UserNote createUserNote(UserNote userNote) {
         return userNoteRepository.save(userNote);
     }
