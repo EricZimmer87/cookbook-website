@@ -29,12 +29,12 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root1234
 
-  frontend:
-    build: ./cookbook-frontend
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
+  # frontend:
+  #   build: ./cookbook-frontend
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     - backend
 
 volumes:
   mysql_data:
