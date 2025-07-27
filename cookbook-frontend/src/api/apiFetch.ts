@@ -1,17 +1,20 @@
+const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+
 export async function apiFetch<T>(
   url: string,
-  method: 'POST' | 'PUT' | 'DELETE',
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   body?: unknown,
 ): Promise<T | null> {
-  const token = JSON.parse(localStorage.getItem('auth') || '{}').token;
+  const auth = localStorage.getItem('auth');
+  const token = auth ? JSON.parse(auth).token : null;
 
-  const response = await fetch(url, {
+  const response = await fetch(`${baseUrl}${url}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: method !== 'GET' && body ? JSON.stringify(body) : undefined,
   });
 
   if (!response.ok) {
@@ -20,12 +23,14 @@ export async function apiFetch<T>(
     throw new Error(`Error ${response.status}: ${errorText}`);
   }
 
-  // Guard against empty body
   const contentLength = response.headers.get('Content-Length');
   if (response.status === 204 || contentLength === '0') {
-    return null; // no content
+    return null;
   }
 
-  // Return parsed JSON if body exists
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 }

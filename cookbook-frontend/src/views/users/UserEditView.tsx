@@ -16,7 +16,7 @@ function UserEditView() {
 
   const handleSave = async (data: Partial<UserDTO>) => {
     await apiFetch(`/api/users/${id}`, 'PUT', data);
-    navigate('/users');
+    navigate(-1);
   };
 
   return (

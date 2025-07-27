@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.cookbookwebsite</groupId>
-	<artifactId>cookbookwebsite</artifactId>
+	<artifactId>cookbook-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cookbookwebsite</name>
 	<description>Demo project for Spring Boot</description>

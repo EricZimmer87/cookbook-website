@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth.ts';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+
 export function useFetch<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { token } = useAuth(); // Get JWT from AuthContext
+  const { token } = useAuth();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -15,8 +17,10 @@ export function useFetch<T>(url: string) {
       setLoading(true);
       setError(null);
 
+      const fullUrl = `${baseUrl}${url}`;
+
       try {
-        const response = await fetch(url, {
+        const response = await fetch(fullUrl, {
           signal: controller.signal,
           headers: {
             'Content-Type': 'application/json',
