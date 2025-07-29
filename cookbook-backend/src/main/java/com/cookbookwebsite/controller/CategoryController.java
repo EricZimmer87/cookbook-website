@@ -40,8 +40,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public CategoryDTO createCategory(@RequestBody Category category) {
+        Category savedCategory = categoryService.createCategory(category);
+        return new CategoryDTO(
+                savedCategory,
+                savedCategory.getRecipes() != null ? savedCategory.getRecipes().size() : 0
+        );
     }
 
     // Delete category
