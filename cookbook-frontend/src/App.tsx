@@ -15,6 +15,10 @@ import TagsView from './views/tags/TagsView.tsx';
 import TagEditView from './views/tags/TagEditView.tsx';
 import TagCreateView from './views/tags/TagCreateView.tsx';
 import TagDeleteView from './views/tags/TagDeleteView.tsx';
+import CategoriesView from './views/categories/CategoriesView';
+import CategoryEditView from './views/categories/CategoryEditView.tsx';
+import CategoryDeleteView from './views/categories/CategoryDeleteView.tsx';
+import CategoryCreateView from './views/categories/CategoryCreateView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,10 @@ const router = createBrowserRouter([
       { path: '/tags/new', element: <TagCreateView /> },
       { path: '/tags/:id/edit', element: <TagEditView /> },
       { path: '/tags/:id/delete', element: <TagDeleteView /> },
+      { path: '/categories', element: <CategoriesView /> },
+      { path: '/categories/new', element: <CategoryCreateView /> },
+      { path: '/categories/:id/edit', element: <CategoryEditView /> },
+      { path: '/categories/:id/delete', element: <CategoryDeleteView /> },
     ],
   },
 ]);

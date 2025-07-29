@@ -1,0 +1,29 @@
+import { useNavigate, useParams } from 'react-router-dom';
+import { useFetch } from '../../api/useFetch.ts';
+import type { CategoryDTO } from '../../types/category.ts';
+import { apiFetch } from '../../api/apiFetch.ts';
+import CategoryForm from '../../components/forms/category/CategoryForm.tsx';
+
+function CategoryEditView() {
+  const { id } = useParams<{ id: string }> ();
+  const navigate = useNavigate();
+
+  const { data: category, loading: categoryLoading } = useFetch<CategoryDTO>(`/api/categories/${id}`);
+
+  if (categoryLoading) return <p>Loading...</p>;
+  if (!category) return <p>Category not found.</p>;
+
+  const handleSave = async (data: Partial<CategoryDTO>) => {
+    await apiFetch(`/api/categories/${id}`, 'PUT', data);
+    navigate(`/categories`);
+  };
+
+  return (
+    <div>
+      <h1>Edit Category</h1>
+      <CategoryForm defaultValues={category} onSubmit={handleSave} />
+    </div>
+  );
+}
+
+export default CategoryEditView;

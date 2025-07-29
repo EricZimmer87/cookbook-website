@@ -30,6 +30,9 @@ function Navbar() {
         <Link to="/tags" className="navbar-link">
           Tags
         </Link>
+        <Link to="/categories" className="navbar-link">
+          Categories
+        </Link>
 
         {/* USER LOGIN */}
         {user ? (

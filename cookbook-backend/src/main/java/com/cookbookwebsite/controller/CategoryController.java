@@ -16,13 +16,35 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    // Get all categories
     @GetMapping
     public List<CategoryDTO> getAllCategoryDTOs() {
         return categoryService.getAllCategoryDTOs();
+    }
+
+    // Get category by ID
+    @GetMapping("/{categoryId}")
+    public CategoryDTO getCategoryById(@PathVariable Integer categoryId) { return categoryService.getCategoryById(categoryId); }
+
+    // Update category
+    @PutMapping("/{id}")
+    public CategoryDTO updateCategory(@PathVariable Integer id, @RequestBody Category updatedCategory) {
+        Category category = categoryService.getCategoryEntityById(id);
+
+        if (updatedCategory.getCategoryName() != null) {
+            category.setCategoryName(updatedCategory.getCategoryName());
+        }
+
+        Category savedCategory = categoryService.saveCategory(category);
+        return new CategoryDTO(savedCategory, savedCategory.getRecipes() != null ? savedCategory.getRecipes().size() : 0);
     }
 
     @PostMapping
     public Category createCategory(@RequestBody Category category) {
         return categoryService.createCategory(category);
     }
+
+    // Delete category
+    @DeleteMapping("/{categoryId}")
+    public void deleteCategory(@PathVariable Integer categoryId) { categoryService.deleteCategoryById(categoryId); }
 }

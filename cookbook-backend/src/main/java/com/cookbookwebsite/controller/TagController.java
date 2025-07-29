@@ -34,7 +34,7 @@ public class TagController {
     // Update tag
     @PutMapping("/{id}")
     public TagDTO updateTag(@PathVariable Integer id, @RequestBody Tag updatedTag) {
-        Tag tag = tagService.getTagEntityById(id); // Return the full entity
+        Tag tag = tagService.getTagEntityById(id);
 
         if (updatedTag.getTagName() != null) {
             tag.setTagName(updatedTag.getTagName());
