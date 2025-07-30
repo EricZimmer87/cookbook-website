@@ -7,3 +7,10 @@ export interface ReviewDTO {
   score: number;
   reviewText: string;
 }
+
+export interface ReviewCreateDTO {
+  recipeId: number;
+  userId: number;
+  score: number;
+  reviewText: string;
+}

@@ -5,6 +5,7 @@ import type { ReviewDTO } from '../../types/review';
 import EditButton from '../../components/buttons/EditButton.tsx';
 import type { RecipeDTO } from '../../types/recipe.ts';
 import type { FavoriteDTO } from '../../types/favorite.ts';
+import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 
 function UserDetailView() {
   const { id } = useParams<{ id: string }>();
@@ -87,6 +88,7 @@ function UserDetailView() {
             <li key={review.reviewId}>
               <strong>{review.recipeName}</strong>: {review.reviewText} ({review.score}/5)
               <EditButton onClick={() => navigate(`/reviews/${review.reviewId}/edit`)} />
+              <DeleteButton onClick={() => navigate(`/reviews/${review.reviewId}/delete`)} />
             </li>
           ))}
         </ul>

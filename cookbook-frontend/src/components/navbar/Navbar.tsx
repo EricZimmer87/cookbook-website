@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth.ts';
 import './Navbar.css';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FaCaretDown } from 'react-icons/fa';
 import Button from '../buttons/Button.tsx';
 import { websiteTitle } from '../../config.ts';
@@ -10,6 +10,30 @@ function Navbar() {
   const { user, logout } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
+
+  const adminRef = useRef<HTMLDivElement>(null);
+  const loginRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        adminRef.current &&
+        !adminRef.current.contains(event.target as Node)
+      ) {
+        setAdminOpen(false);
+      }
+
+      if (
+        loginRef.current &&
+        !loginRef.current.contains(event.target as Node)
+      ) {
+        setLoginOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
     <nav className="navbar">
@@ -26,7 +50,8 @@ function Navbar() {
           Recipes
         </Link>
 
-        <div className="navbar-dropdown">
+        {/* Admin Dropdown */}
+        <div className="navbar-dropdown" ref={adminRef}>
           <Button className="navbar-dropdown-link" onClick={() => setAdminOpen((prev) => !prev)}>
             Admin <FaCaretDown />
           </Button>
@@ -72,9 +97,9 @@ function Navbar() {
         </div>
 
 
-        {/* USER LOGIN */}
+        {/* User Dropdown */}
         {user ? (
-          <div className="navbar-dropdown">
+          <div className="navbar-dropdown" ref={loginRef}>
             <Button className="navbar-dropdown-link" onClick={() => setLoginOpen((prev) => !prev)}>
               Hello, {user.userName} <FaCaretDown />
             </Button>

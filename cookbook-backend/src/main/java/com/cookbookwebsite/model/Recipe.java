@@ -1,6 +1,8 @@
 package com.cookbookwebsite.model;
 
 import jakarta.persistence.*;
+
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -28,6 +30,9 @@ public class Recipe {
 
     @OneToMany(mappedBy = "recipe")
     private List<RecipeIngredient> recipeIngredients;
+
+    @OneToMany(mappedBy = "recipe")
+    private List<RecipeTag> recipeTags;
 
     @Column(name = "recipe_name", nullable = false)
     private String recipeName;
@@ -84,4 +89,8 @@ public class Recipe {
         this.recipeIngredients = recipeIngredients;
     }
 
+    public List<RecipeTag> getRecipeTags() { return recipeTags; }
+    public void setRecipeTags(List<RecipeTag> recipeTags)  {
+        this.recipeTags = recipeTags;
+    }
 }

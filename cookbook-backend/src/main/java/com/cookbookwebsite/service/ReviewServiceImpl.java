@@ -1,8 +1,13 @@
 package com.cookbookwebsite.service;
 
+import com.cookbookwebsite.dto.review.ReviewCreateDTO;
 import com.cookbookwebsite.dto.review.ReviewDTO;
+import com.cookbookwebsite.model.Recipe;
 import com.cookbookwebsite.model.Review;
+import com.cookbookwebsite.model.User;
+import com.cookbookwebsite.repository.RecipeRepository;
 import com.cookbookwebsite.repository.ReviewRepository;
+import com.cookbookwebsite.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,9 +16,17 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
+    private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+    public ReviewServiceImpl(
+            ReviewRepository reviewRepository,
+            RecipeRepository recipeRepository,
+            UserRepository userRepository
+    ) {
         this.reviewRepository = reviewRepository;
+        this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
     }
 
     // Get reviews by user ID
@@ -61,7 +74,24 @@ public class ReviewServiceImpl implements ReviewService {
     // Create a review
     @Override
     @Transactional
-    public Review createReview(Review review) {
+    public Review createReview(ReviewCreateDTO dto) {
+        Recipe recipe = recipeRepository.findById(dto.getRecipeId())
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Review review = new Review();
+        review.setRecipe(recipe);
+        review.setUser(user);
+        review.setScore(dto.getScore());
+        review.setReviewText(dto.getReviewText());
+
         return reviewRepository.save(review);
     }
+
+
+    // Delete review
+    @Override
+    @Transactional
+    public void deleteReviewById(Integer reviewId) { reviewRepository.deleteById(reviewId); }
 }

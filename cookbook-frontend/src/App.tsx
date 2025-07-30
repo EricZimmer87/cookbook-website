@@ -27,6 +27,8 @@ import IngredientsView from './views/ingredients/IngredientsView.tsx';
 import IngredientCreateView from './views/ingredients/IngredientCreateView.tsx';
 import IngredientEditView from './views/ingredients/IngredientEditView.tsx';
 import IngredientDeleteView from './views/ingredients/IngredientDeleteView.tsx';
+import ReviewDeleteView from './views/reviews/ReviewDeleteView.tsx';
+import ReviewCreateView from './views/reviews/ReviewCreateView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,8 @@ const router = createBrowserRouter([
       { path: '/users/:id/delete', element: <UserDeleteView /> },
       { path: '/users/:id/profile', element: <UserProfileView /> },
       { path: '/reviews/:id/edit', element: <ReviewEditView /> },
+      { path: '/reviews/:id/delete', element: <ReviewDeleteView /> },
+      { path: '/reviews/:recipeId/new', element: <ReviewCreateView /> },
       { path: '/tags', element: <TagsView /> },
       { path: '/tags/new', element: <TagCreateView /> },
       { path: '/tags/:id/edit', element: <TagEditView /> },

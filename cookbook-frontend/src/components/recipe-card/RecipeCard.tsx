@@ -2,6 +2,8 @@ import type { RecipeDTO } from '../../types/recipe.ts';
 import type { ReviewDTO } from '../../types/review.ts';
 import { useNavigate } from 'react-router-dom';
 import './RecipeCard.css';
+import AddButton from '../buttons/AddButton.tsx';
+import { useAuth } from '../../context/useAuth.ts';
 
 type RecipeCardProps = {
   recipe: RecipeDTO;
@@ -24,6 +26,9 @@ function RecipeCard({
     }
   };
 
+  const { user } = useAuth();
+  const hasUserReviewed = user && reviews.some((r) => r.userId === user.userId);
+
   return (
     <div
       className={`recipe-card ${clickable ? 'clickable' : ''}`}
@@ -45,6 +50,11 @@ function RecipeCard({
       {showReviews && (
         <div className="recipe-reviews">
           <h4>Reviews:</h4>
+
+          {user && !hasUserReviewed && (
+            <AddButton onClick={() => navigate(`/reviews/${recipe.recipeId}/new`)} />
+          )}
+
           {reviews.length > 0 ? (
             <ul>
               {reviews.map((review) => (

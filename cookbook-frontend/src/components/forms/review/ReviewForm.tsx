@@ -39,6 +39,8 @@ function ReviewForm({ defaultValues = {}, onSubmit }: ReviewFormProps) {
         <input
           {...register('score', {
             required: 'Score is required.',
+            min: { value: 0, message: 'Score must be at least 0.' },
+            max: { value: 5, message: 'Score must be at most 5.' }
           })}
           type="number"
         />

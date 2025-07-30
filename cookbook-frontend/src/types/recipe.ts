@@ -6,6 +6,13 @@ export interface RecipeIngredientDTO {
   ingredientName: string;
 }
 
+export interface RecipeTagDTO {
+  recipeId: number;
+  recipeName: string;
+  tagId: number;
+  tagName: string;
+}
+
 export interface RecipeDTO {
   recipeId: number;
   recipeName: string;
@@ -15,4 +22,5 @@ export interface RecipeDTO {
   difficultyLevel: string;
   userName: string;
   recipeIngredients: RecipeIngredientDTO[];
+  recipeTags: RecipeTagDTO[];
 }

@@ -1,5 +1,6 @@
 package com.cookbookwebsite.dto.recipe;
 
+import com.cookbookwebsite.dto.recipetag.RecipeTagDTO;
 import com.cookbookwebsite.model.Recipe;
 import com.cookbookwebsite.dto.recipeingredient.RecipeIngredientDTO;
 
@@ -14,6 +15,7 @@ public class RecipeDTO {
     private String difficultyLevel;
     private String userName;
     private List<RecipeIngredientDTO> recipeIngredients;
+    private List<RecipeTagDTO> recipeTags;
 
     public RecipeDTO(Recipe recipe) {
         this.recipeId = recipe.getRecipeId();
@@ -27,9 +29,13 @@ public class RecipeDTO {
                 .stream()
                 .map(RecipeIngredientDTO::new)
                 .toList();
+        this.recipeTags = recipe.getRecipeTags()
+                .stream()
+                .map(RecipeTagDTO::new)
+                .toList();
     }
 
-    // Getters only (no setters for DTOs unless needed)
+    // Getters
     public Integer getRecipeId() { return recipeId; }
     public String getRecipeName() { return recipeName; }
     public String getRecipeInstructions() { return recipeInstructions; }
@@ -38,4 +44,5 @@ public class RecipeDTO {
     public String getDifficultyLevel() { return difficultyLevel; }
     public String getUserName() { return userName; }
     public List<RecipeIngredientDTO> getRecipeIngredients() { return recipeIngredients; }
+    public List<RecipeTagDTO> getRecipeTags() { return recipeTags; }
 }

@@ -1,5 +1,6 @@
 package com.cookbookwebsite.controller;
 
+import com.cookbookwebsite.dto.review.ReviewCreateDTO;
 import com.cookbookwebsite.dto.review.ReviewDTO;
 import com.cookbookwebsite.model.Review;
 import com.cookbookwebsite.service.ReviewService;
@@ -41,10 +42,14 @@ public class ReviewController {
         return new ReviewDTO(updated);
     }
 
-    // POST /api/reviews
+    // Create new review
     @PostMapping
-    public ReviewDTO createReview(@RequestBody Review review) {
-        Review saved = reviewService.createReview(review);
-        return new ReviewDTO(saved);
+    public ReviewDTO createReview(@RequestBody ReviewCreateDTO dto) {
+        Review review = reviewService.createReview(dto);
+        return new ReviewDTO(review);
     }
+
+    // Delete review
+    @DeleteMapping("/{reviewId}")
+    public void deleteReview(@PathVariable Integer reviewId) { reviewService.deleteReviewById(reviewId); }
 }
