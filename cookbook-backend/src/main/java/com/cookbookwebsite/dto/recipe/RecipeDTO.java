@@ -21,7 +21,7 @@ public class RecipeDTO {
         this.recipeInstructions = recipe.getRecipeInstructions();
         this.recipeImage = recipe.getRecipeImage();
         this.categoryName = recipe.getCategory() != null ? recipe.getCategory().getCategoryName() : null;
-        this.difficultyLevel = recipe.getDifficultyLevel() != null ? recipe.getDifficultyLevel().getDifficultyLevel() : null;
+        this.difficultyLevel = recipe.getDifficultyLevel() != null ? recipe.getDifficultyLevel().getDifficultyLevelName() : null;
         this.userName = recipe.getUser().getUserName();
         this.recipeIngredients = recipe.getRecipeIngredients()
                 .stream()

@@ -8,7 +8,8 @@ import { websiteTitle } from '../../config.ts';
 
 function Navbar() {
   const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
 
   return (
     <nav className="navbar">
@@ -21,31 +22,61 @@ function Navbar() {
         <Link to="/" className="navbar-link">
           Home
         </Link>
-        <Link to="/users" className="navbar-link">
-          Users
-        </Link>
         <Link to="/recipes" className="navbar-link">
           Recipes
         </Link>
-        <Link to="/tags" className="navbar-link">
-          Tags
-        </Link>
-        <Link to="/categories" className="navbar-link">
-          Categories
-        </Link>
+
+        <div className="navbar-dropdown">
+          <Button className="navbar-dropdown-link" onClick={() => setAdminOpen((prev) => !prev)}>
+            Admin <FaCaretDown />
+          </Button>
+          {adminOpen && (
+            <div className="dropdown-menu">
+              <Link
+                to="/users"
+                className="dropdown-item"
+                onClick={() => setAdminOpen(false)}
+              >
+                Users
+              </Link>
+              <Link
+                to="/tags"
+                className="dropdown-item"
+                onClick={() => setAdminOpen(false)}
+              >
+                Tags
+              </Link>
+              <Link
+                to="/categories"
+                className="dropdown-item"
+                onClick={() => setAdminOpen(false)}
+              >
+                Categories
+              </Link>
+              <Link
+                to="/difficulty-levels"
+                className="dropdown-item"
+                onClick={() => setAdminOpen(false)}
+              >
+                Difficulty Levels
+              </Link>
+            </div>
+          )}
+        </div>
+
 
         {/* USER LOGIN */}
         {user ? (
           <div className="navbar-dropdown">
-            <Button className="navbar-dropdown-link" onClick={() => setIsOpen((prev) => !prev)}>
+            <Button className="navbar-dropdown-link" onClick={() => setLoginOpen((prev) => !prev)}>
               Hello, {user.userName} <FaCaretDown />
             </Button>
-            {isOpen && (
+            {loginOpen && (
               <div className="dropdown-menu">
                 <Link
                   to={`/users/${user.userId}/profile`}
                   className="dropdown-item"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setLoginOpen(false)}
                 >
                   View Profile
                 </Link>
@@ -53,7 +84,7 @@ function Navbar() {
                   className="dropdown-item"
                   onClick={() => {
                     logout();
-                    setIsOpen(false);
+                    setLoginOpen(false);
                   }}
                 >
                   Logout

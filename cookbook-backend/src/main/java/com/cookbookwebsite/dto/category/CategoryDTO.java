@@ -13,14 +13,13 @@ public class CategoryDTO {
         this.recipeCount = recipeCount;
     }
 
+    // Getters
     public Integer getCategoryId() {
         return categoryId;
     }
-
     public String getCategoryName() {
         return categoryName;
     }
-
     public int getRecipeCount() {
         return recipeCount;
     }

@@ -19,6 +19,10 @@ import CategoriesView from './views/categories/CategoriesView';
 import CategoryEditView from './views/categories/CategoryEditView.tsx';
 import CategoryDeleteView from './views/categories/CategoryDeleteView.tsx';
 import CategoryCreateView from './views/categories/CategoryCreateView.tsx';
+import DifficultyLevelsView from './views/difficulty-level/DifficultyLevelsView.tsx';
+import DifficultyLevelCreateView from './views/difficulty-level/DifficultyLevelCreateView.tsx';
+import DifficultyLevelEditView from './views/difficulty-level/DifficultyLevelEditView.tsx';
+import DifficultyLevelDeleteView from './views/difficulty-level/DifficultyLevelDeleteView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +48,10 @@ const router = createBrowserRouter([
       { path: '/categories/new', element: <CategoryCreateView /> },
       { path: '/categories/:id/edit', element: <CategoryEditView /> },
       { path: '/categories/:id/delete', element: <CategoryDeleteView /> },
+      { path: '/difficulty-levels', element: <DifficultyLevelsView /> },
+      { path: '/difficulty-levels/new', element: <DifficultyLevelCreateView /> },
+      { path: '/difficulty-levels/:id/edit', element: <DifficultyLevelEditView /> },
+      { path: '/difficulty-levels/:id/delete', element: <DifficultyLevelDeleteView /> },
     ],
   },
 ]);

@@ -23,8 +23,8 @@ public class DifficultyLevel {
         this.difficultyId = difficultyId;
     }
 
-    public String getDifficultyLevel() { return difficultyLevel; }
-    public void setDifficultyLevel(String difficultyLevel) {
+    public String getDifficultyLevelName() { return difficultyLevel; }
+    public void setDifficultyLevelName(String difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
     }
 

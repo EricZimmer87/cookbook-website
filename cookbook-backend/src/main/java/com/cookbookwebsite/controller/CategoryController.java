@@ -39,6 +39,7 @@ public class CategoryController {
         return new CategoryDTO(savedCategory, savedCategory.getRecipes() != null ? savedCategory.getRecipes().size() : 0);
     }
 
+    // Create new category
     @PostMapping
     public CategoryDTO createCategory(@RequestBody Category category) {
         Category savedCategory = categoryService.createCategory(category);
