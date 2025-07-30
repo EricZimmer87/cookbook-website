@@ -60,6 +60,13 @@ function Navbar() {
               >
                 Difficulty Levels
               </Link>
+              <Link
+                to="/ingredients"
+                className="dropdown-item"
+                onClick={() => setAdminOpen(false)}
+              >
+                Ingredients
+              </Link>
             </div>
           )}
         </div>

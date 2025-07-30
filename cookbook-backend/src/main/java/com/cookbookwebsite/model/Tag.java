@@ -21,7 +21,6 @@ public class Tag {
     public Integer getTagId() {
         return tagId;
     }
-
     public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }
@@ -29,7 +28,6 @@ public class Tag {
     public String getTagName() {
         return tagName;
     }
-
     public void setTagName(String tagName) {
         this.tagName = tagName;
     }
@@ -37,7 +35,6 @@ public class Tag {
     public List<RecipeTag> getRecipeTags() {
         return recipeTags;
     }
-
     public void setRecipeTags(List<RecipeTag> recipeTags) {
         this.recipeTags = recipeTags;
     }

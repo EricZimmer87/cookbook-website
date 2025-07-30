@@ -23,6 +23,10 @@ import DifficultyLevelsView from './views/difficulty-level/DifficultyLevelsView.
 import DifficultyLevelCreateView from './views/difficulty-level/DifficultyLevelCreateView.tsx';
 import DifficultyLevelEditView from './views/difficulty-level/DifficultyLevelEditView.tsx';
 import DifficultyLevelDeleteView from './views/difficulty-level/DifficultyLevelDeleteView.tsx';
+import IngredientsView from './views/ingredients/IngredientsView.tsx';
+import IngredientCreateView from './views/ingredients/IngredientCreateView.tsx';
+import IngredientEditView from './views/ingredients/IngredientEditView.tsx';
+import IngredientDeleteView from './views/ingredients/IngredientDeleteView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +56,10 @@ const router = createBrowserRouter([
       { path: '/difficulty-levels/new', element: <DifficultyLevelCreateView /> },
       { path: '/difficulty-levels/:id/edit', element: <DifficultyLevelEditView /> },
       { path: '/difficulty-levels/:id/delete', element: <DifficultyLevelDeleteView /> },
+      { path: '/ingredients', element: <IngredientsView /> },
+      { path: '/ingredients/new', element: <IngredientCreateView /> },
+      { path: '/ingredients/:id/edit', element: <IngredientEditView /> },
+      { path: '/ingredients/:id/delete', element: <IngredientDeleteView /> },
     ],
   },
 ]);
