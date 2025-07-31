@@ -73,21 +73,27 @@ public class ReviewServiceImpl implements ReviewService {
 
     // Create a review
     @Override
-    @Transactional
-    public Review createReview(ReviewCreateDTO dto) {
-        Recipe recipe = recipeRepository.findById(dto.getRecipeId())
-                .orElseThrow(() -> new RuntimeException("Recipe not found"));
-        User user = userRepository.findById(dto.getUserId())
+    public ReviewDTO createReview(ReviewCreateDTO dto, Integer userId) {
+        Review review = new Review();
+
+        // Assuming you have User and Recipe objects to set
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Review review = new Review();
-        review.setRecipe(recipe);
+        Recipe recipe = recipeRepository.findById(dto.getRecipeId())
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
         review.setUser(user);
+        review.setRecipe(recipe);
         review.setScore(dto.getScore());
         review.setReviewText(dto.getReviewText());
 
-        return reviewRepository.save(review);
+        Review saved = reviewRepository.save(review);
+
+        // Manually create ReviewDTO to return
+        return new ReviewDTO(saved);
     }
+
 
 
     // Delete review

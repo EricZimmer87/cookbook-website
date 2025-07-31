@@ -3,7 +3,7 @@ import EditButton from '../../components/buttons/EditButton.tsx';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import { useFetch } from '../../api/useFetch.ts';
 import type { IngredientDTO } from '../../types/ingredient.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function IngredientsView() {
   const {
@@ -11,7 +11,9 @@ function IngredientsView() {
     loading: ingredientsLoading,
     error
   } = useFetch<IngredientDTO[]>('/api/ingredients');
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (ingredientsLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading tags...</p>;
@@ -20,7 +22,7 @@ function IngredientsView() {
   return (
     <div>
       <h1>All Ingredients</h1>
-      <AddButton onClick={() => navigate('/ingredients/new')} />
+      <AddButton onClick={() => navigate('/ingredients/new', { state: { from: location.pathname } })} />
       <table>
         <thead>
         <tr>
@@ -37,8 +39,8 @@ function IngredientsView() {
               <td>{ingredient.ingredientId}</td>
               <td>{ingredient.ingredientName}</td>
               <td>
-                <EditButton onClick={() => navigate(`/ingredients/${ingredient.ingredientId}/edit`)} />
-                <DeleteButton onClick={() => navigate(`/ingredients/${ingredient.ingredientId}/delete`)} />
+                <EditButton onClick={() => navigate(`/ingredients/${ingredient.ingredientId}/edit`, { state: { from: location.pathname } })} />
+                <DeleteButton onClick={() => navigate(`/ingredients/${ingredient.ingredientId}/delete`, { state: { from: location.pathname } })} />
               </td>
             </tr>
           ))}

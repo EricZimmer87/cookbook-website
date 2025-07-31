@@ -1,9 +1,7 @@
 import type { RecipeDTO } from '../../types/recipe.ts';
 import type { ReviewDTO } from '../../types/review.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './RecipeCard.css';
-import AddButton from '../buttons/AddButton.tsx';
-import { useAuth } from '../../context/useAuth.ts';
 
 type RecipeCardProps = {
   recipe: RecipeDTO;
@@ -15,19 +13,15 @@ type RecipeCardProps = {
 function RecipeCard({
   recipe,
   clickable = false,
-  showReviews = false,
-  reviews = [],
 }: RecipeCardProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = () => {
     if (clickable) {
-      navigate(`/recipes/${recipe.recipeId}`);
+      navigate(`/recipes/${recipe.recipeId}`, { state: { from: location.pathname } });
     }
   };
-
-  const { user } = useAuth();
-  const hasUserReviewed = user && reviews.some((r) => r.userId === user.userId);
 
   return (
     <div
@@ -47,27 +41,6 @@ function RecipeCard({
       </ul>
       <p>{recipe.recipeInstructions}</p>
 
-      {showReviews && (
-        <div className="recipe-reviews">
-          <h4>Reviews:</h4>
-
-          {user && !hasUserReviewed && (
-            <AddButton onClick={() => navigate(`/reviews/${recipe.recipeId}/new`)} />
-          )}
-
-          {reviews.length > 0 ? (
-            <ul>
-              {reviews.map((review) => (
-                <li key={review.reviewId}>
-                  <strong>{review.userName}</strong>: {review.reviewText} ({review.score}/5)
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No reviews.</p>
-          )}
-        </div>
-      )}
     </div>
   );
 }

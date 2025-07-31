@@ -5,8 +5,7 @@ export async function apiFetch<T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   body?: unknown,
 ): Promise<T | null> {
-  const auth = localStorage.getItem('auth');
-  const token = auth ? JSON.parse(auth).token : null;
+  const token = localStorage.getItem('token');
 
   const response = await fetch(`${baseUrl}${url}`, {
     method,

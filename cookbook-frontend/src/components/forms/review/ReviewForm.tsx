@@ -1,13 +1,13 @@
 import type { ReviewDTO } from '../../../types/review.ts';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SaveButton from '../../buttons/SaveButton.tsx';
-import Button from '../../buttons/Button.tsx';
 import { useEffect } from 'react';
+import CancelButton from '../../buttons/CancelButton.tsx';
 
 type ReviewFormProps = {
   defaultValues?: Partial<ReviewDTO>;
-  onSubmit: (data: Partial<ReviewDTO>) => void;
+  onSubmit: (data: Partial<ReviewDTO>) => Promise<void>;
 };
 
 function ReviewForm({ defaultValues = {}, onSubmit }: ReviewFormProps) {
@@ -27,13 +27,19 @@ function ReviewForm({ defaultValues = {}, onSubmit }: ReviewFormProps) {
   }, [defaultValues, reset]);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleCancel = () => {
-    navigate(-1);
+  const handleFormSubmit = async (data: Partial<ReviewDTO>) => {
+    await onSubmit(data);
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else {
+      navigate('/');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="form">
       <div className="form-group">
         <label>Score</label>
         <input
@@ -59,9 +65,7 @@ function ReviewForm({ defaultValues = {}, onSubmit }: ReviewFormProps) {
       </div>
 
       <SaveButton type="submit" />
-      <Button className="button" onClick={handleCancel}>
-        Cancel
-      </Button>
+      <CancelButton type="submit" />
     </form>
   );
 }

@@ -9,4 +9,5 @@ public interface UserNoteService {
     List<UserNoteDTO> getNotesByUserId(Integer userId);
     List<UserNoteDTO> getNotesByRecipeId(Integer recipeId);
     UserNote createUserNote(UserNote userNote);
+    UserNoteDTO getNoteByUserIdAndRecipeId(Integer userId, Integer recipeId);
 }

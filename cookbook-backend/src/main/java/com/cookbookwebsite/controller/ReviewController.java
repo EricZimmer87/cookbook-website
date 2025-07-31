@@ -3,7 +3,10 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.dto.review.ReviewCreateDTO;
 import com.cookbookwebsite.dto.review.ReviewDTO;
 import com.cookbookwebsite.model.Review;
+import com.cookbookwebsite.security.CustomUserDetails;
 import com.cookbookwebsite.service.ReviewService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,9 +47,13 @@ public class ReviewController {
 
     // Create new review
     @PostMapping
-    public ReviewDTO createReview(@RequestBody ReviewCreateDTO dto) {
-        Review review = reviewService.createReview(dto);
-        return new ReviewDTO(review);
+    public ResponseEntity<ReviewDTO> createReview(
+            @RequestBody ReviewCreateDTO reviewDTO,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Integer userId = userDetails.getUserId();
+        ReviewDTO saved = reviewService.createReview(reviewDTO, userId);
+        return ResponseEntity.ok(saved);
     }
 
     // Delete review

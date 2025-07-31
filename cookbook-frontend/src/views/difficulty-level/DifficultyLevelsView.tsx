@@ -1,6 +1,6 @@
 import { useFetch } from '../../api/useFetch.ts';
 import type { DifficultyLevelDTO } from '../../types/difficulty-level.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AddButton from '../../components/buttons/AddButton.tsx';
 import EditButton from '../../components/buttons/EditButton.tsx';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
@@ -11,7 +11,9 @@ function DifficultyLevelsView() {
     loading: difficultyLevelsLoading,
     error,
   } = useFetch<DifficultyLevelDTO[]>('/api/difficulty-levels');
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (difficultyLevelsLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -20,7 +22,7 @@ function DifficultyLevelsView() {
   return (
     <div>
       <h1>All Difficulty Levels</h1>
-      <AddButton onClick={() => navigate('/difficulty-levels/new')} />
+      <AddButton onClick={() => navigate('/difficulty-levels/new', { state: { from: location.pathname } })} />
       <table>
         <thead>
         <tr>
@@ -36,8 +38,8 @@ function DifficultyLevelsView() {
               <td>{difficultyLevel.difficultyLevelId}</td>
               <td>{difficultyLevel.difficultyLevelName}</td>
               <td>
-                <EditButton onClick={() => navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/edit`)} />
-                <DeleteButton onClick={() => navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/delete`)} />
+                <EditButton onClick={() => navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/edit`, { state: { from: location.pathname } })} />
+                <DeleteButton onClick={() => navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/delete`, { state: { from: location.pathname } })} />
               </td>
             </tr>
           ))}

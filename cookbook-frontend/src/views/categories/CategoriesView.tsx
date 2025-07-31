@@ -3,7 +3,7 @@ import { useFetch } from '../../api/useFetch.ts';
 import type { CategoryDTO } from '../../types/category.ts';
 import EditButton from '../../components/buttons/EditButton.tsx';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function CategoriesView() {
   const {
@@ -11,7 +11,9 @@ function CategoriesView() {
     loading: categoriesLoading,
     error,
   } = useFetch<CategoryDTO[]>('/api/categories');
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (categoriesLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -20,7 +22,7 @@ function CategoriesView() {
   return (
     <div>
       <h1>All Categories</h1>
-      <AddButton onClick={() => navigate('/categories/new')} />
+      <AddButton onClick={() => navigate('/categories/new', { state: { from: location.pathname } })} />
       <table>
         <thead>
           <tr>
@@ -43,9 +45,9 @@ function CategoriesView() {
                 <td>{category.categoryName}</td>
                 <td>{category.recipeCount}</td>
                 <td>
-                  <EditButton onClick={() => navigate(`/categories/${category.categoryId}/edit`)} />
+                  <EditButton onClick={() => navigate(`/categories/${category.categoryId}/edit`, { state: { from: location.pathname } })} />
                   <DeleteButton
-                    onClick={() => navigate(`/categories/${category.categoryId}/delete`)}
+                    onClick={() => navigate(`/categories/${category.categoryId}/delete`, { state: { from: location.pathname } })}
                   />
                 </td>
               </tr>

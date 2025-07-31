@@ -3,15 +3,27 @@ package com.cookbookwebsite.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Service
 public class JwtService {
+    @Value("${jwt.secret}")
+    private String secret;
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        byte[] decodedKey = Base64.getDecoder().decode(secret);
+        this.key = Keys.hmacShaKeyFor(decodedKey);
+    }
 
     // Create JWT
     public String generateToken(String userEmail) {

@@ -44,4 +44,11 @@ public class UserNoteServiceImpl implements UserNoteService {
     public UserNote createUserNote(UserNote userNote) {
         return userNoteRepository.save(userNote);
     }
+
+    @Override
+    public UserNoteDTO getNoteByUserIdAndRecipeId(Integer userId, Integer recipeId) {
+        return userNoteRepository.findByUser_UserIdAndRecipe_RecipeId(userId, recipeId)
+                .map(UserNoteDTO::new)  // uses your existing constructor
+                .orElse(null);
+    }
 }

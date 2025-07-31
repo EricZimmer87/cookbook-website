@@ -2,12 +2,18 @@ import { useFetch } from '../../api/useFetch.ts';
 import type { TagDTO } from '../../types/tag.ts';
 import EditButton from '../../components/buttons/EditButton.tsx';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AddButton from '../../components/buttons/AddButton.tsx';
 
 function TagsView() {
-  const { data: tags, loading: tagsLoading, error } = useFetch<TagDTO[]>('/api/tags');
+  const {
+    data: tags,
+    loading: tagsLoading,
+    error
+  } = useFetch<TagDTO[]>('/api/tags');
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (tagsLoading) return <p>Loading tags...</p>;
   if (error) return <p>Error loading tags...</p>;
@@ -16,7 +22,7 @@ function TagsView() {
   return (
     <div>
       <h1>All Tags</h1>
-      <AddButton onClick={() => navigate('/tags/new')} />
+      <AddButton onClick={() => navigate('/tags/new', { state: { from: location.pathname } })} />
       <table>
         <thead>
           <tr>
@@ -33,8 +39,8 @@ function TagsView() {
                 <td>{tag.tagId}</td>
                 <td>{tag.tagName}</td>
                 <td>
-                  <EditButton onClick={() => navigate(`/tags/${tag.tagId}/edit`)} />
-                  <DeleteButton onClick={() => navigate(`/tags/${tag.tagId}/delete`)} />
+                  <EditButton onClick={() => navigate(`/tags/${tag.tagId}/edit`, { state: { from: location.pathname } })} />
+                  <DeleteButton onClick={() => navigate(`/tags/${tag.tagId}/delete`, { state: { from: location.pathname } })} />
                 </td>
               </tr>
             ))}
