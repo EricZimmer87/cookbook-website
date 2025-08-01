@@ -1,6 +1,9 @@
-# .env
-JWT_SECRET=SsQ39vP2xeev3IL8agFPsbcqggZBACUPNE2sxY3UqL4=
+# Secrets
+.env
+secrets/
 
-# Ignore IDE and OS cruft
+# IntelliJ
 .idea/
+
+# macOS metadata
 .DS_Store
