@@ -1,0 +1,6 @@
+# .env
+JWT_SECRET=SsQ39vP2xeev3IL8agFPsbcqggZBACUPNE2sxY3UqL4=
+
+# Ignore IDE and OS cruft
+.idea/
+.DS_Store
