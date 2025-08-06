@@ -5,9 +5,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+// Provides utility methods to access the logged-in user.
 @Service
 public class AuthService {
-
+    // Allows controllers/services to easily get the user’s ID from the request context.
     public Integer getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {

@@ -3,12 +3,14 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.dto.ingredient.IngredientDTO;
 import com.cookbookwebsite.model.Ingredient;
 import com.cookbookwebsite.service.IngredientService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
+@PreAuthorize("hasRole('ADMIN', 'CONTRIBUTOR')")
 public class IngredientController {
     private final IngredientService ingredientService;
 

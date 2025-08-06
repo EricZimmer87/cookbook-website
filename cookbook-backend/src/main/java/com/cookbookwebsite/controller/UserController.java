@@ -5,6 +5,7 @@ import com.cookbookwebsite.model.Role;
 import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RoleRepository;
 import com.cookbookwebsite.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,15 @@ public class UserController {
     }
 
     // Get all users
+    @PreAuthorize("hasRole('ADMIN')") // Only allow admin access
     @GetMapping
     public List<UserDTO> getAllUserDTOs() {
         return userService.getAllUserDTOs();
     }
 
     // Get user by ID
+    // Allow admin or user_id of currently logged in user
+    @PreAuthorize("#id == principal.userId or hasRole('ADMIN')")
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
@@ -39,6 +43,7 @@ public class UserController {
     }
 
     // Update user (PUT)
+    @PreAuthorize("#id == principal.userId or hasRole('ADMIN')")
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
         User user = userService.getUserEntityById(id); // Return the full entity
@@ -60,6 +65,7 @@ public class UserController {
     }
 
     // Delete user (DELETE)
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);

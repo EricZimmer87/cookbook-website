@@ -3,12 +3,14 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.dto.difficultylevel.DifficultyLevelDTO;
 import com.cookbookwebsite.model.DifficultyLevel;
 import com.cookbookwebsite.service.DifficultyLevelService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/difficulty-levels")
+@PreAuthorize("hasRole('ADMIN')") // Only allow admin access
 public class DifficultyLevelController {
     private final DifficultyLevelService difficultyLevelService;
 

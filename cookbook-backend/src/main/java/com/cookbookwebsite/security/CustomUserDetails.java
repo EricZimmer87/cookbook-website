@@ -2,11 +2,14 @@ package com.cookbookwebsite.security;
 
 import com.cookbookwebsite.model.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
+// Wraps User object to be usable with Spring Security.
 public class CustomUserDetails implements UserDetails {
+    // This object is what gets stored in the SecurityContext.
     private final User user;
 
     public CustomUserDetails(User user) {
@@ -23,7 +26,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // or handle roles if needed
+        // Handle roles/permissions here
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRoleName().toUpperCase()));
     }
 
     @Override public String getPassword() { return user.getPasswordHash(); }

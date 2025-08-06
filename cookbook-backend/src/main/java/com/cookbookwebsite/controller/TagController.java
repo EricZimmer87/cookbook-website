@@ -6,12 +6,14 @@ import com.cookbookwebsite.model.Role;
 import com.cookbookwebsite.model.Tag;
 import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.service.TagService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
+@PreAuthorize("hasRole('ADMIN')")
 public class TagController {
     private final TagService tagService;
 

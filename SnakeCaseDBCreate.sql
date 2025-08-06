@@ -97,7 +97,7 @@ CREATE TABLE recipe_ingredients (
 CREATE TABLE tags (
     tag_id INT AUTO_INCREMENT PRIMARY KEY,
     tag_name VARCHAR(255) NOT NULL
-);  
+);
 
 -- recipe_tags table
 CREATE TABLE recipe_tags (
@@ -126,14 +126,14 @@ VALUES ('very easy'), ('easy'), ('medium'), ('hard'), ('very hard');
 
 -- insert data into ingredients table
 INSERT INTO ingredients (ingredient_name)
-VALUES 
-('tofu'),  
-('rolled oats'), 
-('raw walnuts'), 
-('basil'), 
-('oregano'), 
-('parsley'), 
-('minced onion'), 
+VALUES
+('tofu'),
+('rolled oats'),
+('raw walnuts'),
+('basil'),
+('oregano'),
+('parsley'),
+('minced onion'),
 ('bragg''s liquid aminos'),
 ('green beans'),
 ('mushrooms'),
@@ -162,36 +162,103 @@ VALUES
 ('cumin');
 
 -- insert data into tags table
-INSERT INTO tags (tag_name)
-VALUES ('vegan');
+INSERT INTO tags (tag_name) VALUES
+  ('Vegan'),
+  ('Vegetarian'),
+  ('Gluten-Free'),
+  ('Dairy-Free'),
+  ('Low-Carb'),
+  ('High-Protein'),
+  ('Keto'),
+  ('Paleo'),
+  ('Whole30'),
+  ('Quick'),
+  ('Easy'),
+  ('5 Ingredients or Less'),
+  ('One-Pot'),
+  ('Sheet Pan'),
+  ('No-Bake'),
+  ('Slow Cooker'),
+  ('Instant Pot'),
+  ('Air Fryer'),
+  ('Grilled'),
+  ('Baked'),
+  ('Fried'),
+  ('Raw'),
+  ('Snack'),
+  ('Dessert'),
+  ('Appetizer'),
+  ('Side Dish'),
+  ('Main Course'),
+  ('Soup'),
+  ('Salad'),
+  ('Pasta'),
+  ('Pizza'),
+  ('Sandwich'),
+  ('Wrap'),
+  ('Burger'),
+  ('Rice'),
+  ('Noodles'),
+  ('Seafood'),
+  ('Chicken'),
+  ('Beef'),
+  ('Pork'),
+  ('Tofu'),
+  ('Beans'),
+  ('Chickpeas'),
+  ('Lentils'),
+  ('Eggs'),
+  ('Chocolate'),
+  ('Spicy'),
+  ('Sweet'),
+  ('Savory'),
+  ('Comfort Food'),
+  ('Healthy'),
+  ('Kid-Friendly'),
+  ('Holiday'),
+  ('Christmas'),
+  ('Thanksgiving'),
+  ('Easter'),
+  ('Halloween'),
+  ('Asian'),
+  ('Mexican'),
+  ('Italian'),
+  ('Indian'),
+  ('Mediterranean'),
+  ('Middle Eastern'),
+  ('American'),
+  ('French'),
+  ('Thai'),
+  ('Japanese'),
+  ('Korean');
 
 -- insert data into recipes table
 -- recipe 1: tofu meatballs
 INSERT INTO recipes (category_id, difficulty_id, user_id, recipe_instructions, recipe_name, recipe_image, ingredients_notes)
-VALUES 
-(1, 1, 1, 'Preheat oven to 350°F. Blend oats and walnuts in a blender or food processor. Chopping them up finely on a cutting board could also work. Add blended oats and walnuts to a medium-sized mixing bowl. Add basil, oregano, parsley, minced onion, and bragg''s liquid aminos. Mix with fork. Add tofu. Mix with fork or pastry blender until mixed well and tofu is broken up well. Use a flipper scoop to make into balls. Place balls on baking sheet. Optionally, instead of making balls, lay the mixture out on a baking sheet and form into a sheet. Bake at 350°F for 35 minutes.', 
+VALUES
+(1, 1, 1, 'Preheat oven to 350°F. Blend oats and walnuts in a blender or food processor. Chopping them up finely on a cutting board could also work. Add blended oats and walnuts to a medium-sized mixing bowl. Add basil, oregano, parsley, minced onion, and bragg''s liquid aminos. Mix with fork. Add tofu. Mix with fork or pastry blender until mixed well and tofu is broken up well. Use a flipper scoop to make into balls. Place balls on baking sheet. Optionally, instead of making balls, lay the mixture out on a baking sheet and form into a sheet. Bake at 350°F for 35 minutes.',
 'Tofu Meatballs', null, null);
 
 -- recipe 2: nutty green bean casserole
 INSERT INTO recipes (category_id, difficulty_id, user_id, recipe_instructions, recipe_name, recipe_image, ingredients_notes)
-VALUES 
-(1, 2, 1, 'Preheat oven to 350°F. slice the mushrooms. Dice the onion. Cook the mushrooms and onion in a pan. Heat the green beans up in a pan. Blend the remaining ingredients in a blender with the liquid from the mushrooms and onion and the green beans. If the mixture in the blender is too thick, add soy milk until it is a creamy consistency. Mix all ingredients together, place in a casserole dish, bake for 15 minutes.', 
+VALUES
+(1, 2, 1, 'Preheat oven to 350°F. slice the mushrooms. Dice the onion. Cook the mushrooms and onion in a pan. Heat the green beans up in a pan. Blend the remaining ingredients in a blender with the liquid from the mushrooms and onion and the green beans. If the mixture in the blender is too thick, add soy milk until it is a creamy consistency. Mix all ingredients together, place in a casserole dish, bake for 15 minutes.',
 'Nutty Green Bean Casserole', null, null);
 
 -- recipe 3: pumpkin pie, healthy
 INSERT INTO recipes (category_id, difficulty_id, user_id, recipe_instructions, recipe_name, recipe_image, ingredients_notes)
-VALUES 
-(2, 2, 1, 'Preheat oven to 350°F. For the crust, blend walnuts, coconut, and oats. Then add 4 medjool dates or 8 regular dates and blend until it sticks together. Spread the crust into a pie pan. blend the remaining ingredients for the filling, using 1/2 cup dates. Put the filling on top of the crust in the pie pan, spreading evenly. cover with foil. Bake for 45 minutes. Remove foil, bake for 15 additional minutes.', 
+VALUES
+(2, 2, 1, 'Preheat oven to 350°F. For the crust, blend walnuts, coconut, and oats. Then add 4 medjool dates or 8 regular dates and blend until it sticks together. Spread the crust into a pie pan. blend the remaining ingredients for the filling, using 1/2 cup dates. Put the filling on top of the crust in the pie pan, spreading evenly. cover with foil. Bake for 45 minutes. Remove foil, bake for 15 additional minutes.',
 'Pumpkin Pie, Healthy', null, 'Can use 4 medjool dates or 8 regular dates for the crust.');
 
 -- recipe 4: ketchup
 INSERT INTO recipes (category_id, difficulty_id, user_id, recipe_instructions, recipe_name, recipe_image, ingredients_notes)
-VALUES 
-(3, 3, 1, 'Blend all ingredients in a high-powered blender.', 
+VALUES
+(3, 3, 1, 'Blend all ingredients in a high-powered blender.',
 'Ketchup', null, 'If using medjool dates, use 7. 12 oz tomato paste is two small (6 oz) cans.');
 
 -- recipe 5: eric's bean burgers
 INSERT INTO recipes (category_id, difficulty_id, user_id, recipe_instructions, recipe_name, recipe_image, ingredients_notes)
-VALUES 
-(1, 2, 1, 'Preheat oven to 350°F. Blend oats and almonds, place in bowl. blend beans, place in same bowl. Add remaining ingredients. Mix well. spread on baking sheet or form into burgers. Bake for 25 minutes.', 
+VALUES
+(1, 2, 1, 'Preheat oven to 350°F. Blend oats and almonds, place in bowl. blend beans, place in same bowl. Add remaining ingredients. Mix well. spread on baking sheet or form into burgers. Bake for 25 minutes.',
 'Eric''s Bean Burgers', null, 'Can use one can of garbanzo beans. Can substitute shredded carrots with shredded zucchini.');

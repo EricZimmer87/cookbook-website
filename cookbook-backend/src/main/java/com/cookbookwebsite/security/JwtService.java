@@ -12,6 +12,7 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+// Handles generation and validation of JWTs.
 @Service
 public class JwtService {
     @Value("${jwt.secret}")
@@ -19,6 +20,7 @@ public class JwtService {
 
     private SecretKey key;
 
+    // Converts the secret from application.properties to a cryptographic key.
     @PostConstruct
     public void init() {
         byte[] decodedKey = Base64.getDecoder().decode(secret);
@@ -26,6 +28,7 @@ public class JwtService {
     }
 
     // Create JWT
+    // Signs a JWT with subject = email, expiration = 24h, and the secret key.
     public String generateToken(String userEmail) {
         long nowMillis = System.currentTimeMillis();
         long expMillis = nowMillis + 86400000; // Token valid for 1 day
@@ -39,6 +42,7 @@ public class JwtService {
     }
 
     // Validate and parse JWT
+    // Verifies the token and extracts the email (which we use to look up the user).
     public String extractUserEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

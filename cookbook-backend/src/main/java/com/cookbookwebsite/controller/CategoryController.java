@@ -3,12 +3,14 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.model.Category;
 import com.cookbookwebsite.dto.category.CategoryDTO;
 import com.cookbookwebsite.service.CategoryService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
+@PreAuthorize("hasRole('ADMIN')") // Only allow admin access
 public class CategoryController {
     private final CategoryService categoryService;
 

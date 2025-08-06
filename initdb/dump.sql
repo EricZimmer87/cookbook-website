@@ -289,7 +289,12 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,1,'eric zimmer','ericzimmer87@icloud.com','dummypassword'),(2,2,'Eric Zimmer, The Best','ericzimmer@example.com','$2a$10$jIhchHBn7NKqcavvWoF04.ONHN/AHQk3wyP0g5RqW9On/e6FEG2La'),(9,3,'john','john@example.com','$2a$10$LjhSG3Muwj/az16nfPPb1u2WCOLBNByqVOVT9FHgVb3fNyyhg004q');
+
+INSERT INTO `users` (user_id, role_id, user_name, user_email, password_hash) VALUES
+  (1, 1, 'admin', 'admin@example.com', '$2a$10$WqRwwG0AhXCx3lLY6J8vsemrYSYumWo25dMwIVi9tuugmhnuaO3N.'),
+  (2, 2, 'contributor', 'contributor@example.com', '$2a$10$aVFflvVqJKLI5kEsnPetH.0PbryD.rtQaKXXl8jCBPgCnqRB9sfku'),
+  (3, 3, 'viewer', 'viewer@example.com', '$2a$10$XpNd4V5hOgoi/b9bZmW9Y.PVZ/uSPaWAXdKs2TJJh6FHfC/h/TOg.');
+
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
