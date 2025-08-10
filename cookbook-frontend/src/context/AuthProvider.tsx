@@ -1,8 +1,9 @@
 import { type ReactNode, useEffect, useState } from 'react';
-import { AuthContext, type User } from './AuthContext';
+import { AuthContext } from './AuthContext';
+import type { UserDTO } from '../types/user';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = (user: User, jwt: string) => {
+  const login = (user: UserDTO, jwt: string) => {
     setUser(user);
     setToken(jwt);
     localStorage.setItem('user', JSON.stringify(user));

@@ -3,18 +3,24 @@ import { useFetch } from '../../api/useFetch.ts';
 import type { CategoryDTO } from '../../types/category.ts';
 import { apiFetch } from '../../api/apiFetch.ts';
 import CategoryForm from '../../components/forms/category/CategoryForm.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function CategoryEditView() {
-  const { id } = useParams<{ id: string }> ();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: category, loading: categoryLoading } = useFetch<CategoryDTO>(`/api/categories/${id}`);
+  const {
+    data: category,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useFetch<CategoryDTO>(`/api/categories/${recipeId}`);
+  useErrorRedirect(categoryError);
 
   if (categoryLoading) return <p>Loading...</p>;
   if (!category) return <p>Category not found.</p>;
 
   const handleSave = async (data: Partial<CategoryDTO>) => {
-    await apiFetch(`/api/categories/${id}`, 'PUT', data);
+    await apiFetch(`/api/categories/${recipeId}`, 'PUT', data);
     navigate(`/categories`);
   };
 

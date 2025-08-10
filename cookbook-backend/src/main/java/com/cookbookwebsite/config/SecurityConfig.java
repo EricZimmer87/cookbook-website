@@ -29,7 +29,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
 
                         // Recipes
                         .requestMatchers("/api/recipes").permitAll()
@@ -37,6 +37,10 @@ public class SecurityConfig {
 
                         // Reviews
                         .requestMatchers(HttpMethod.GET, "/api/reviews/recipe/**").permitAll()
+
+                        // Mail
+                        .requestMatchers("/api/password-reset/**").permitAll()
+                        .requestMatchers("/api/test-mail/**").permitAll()
 
                         // Everything else default (adjust as needed)
                         .anyRequest().authenticated()

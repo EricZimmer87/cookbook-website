@@ -3,6 +3,7 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.dto.ingredient.IngredientDTO;
 import com.cookbookwebsite.model.Ingredient;
 import com.cookbookwebsite.service.IngredientService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
-@PreAuthorize("hasRole('ADMIN', 'CONTRIBUTOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
 public class IngredientController {
     private final IngredientService ingredientService;
 
@@ -51,6 +52,8 @@ public class IngredientController {
 
     // Delete ingredient
     @DeleteMapping("/{ingredientId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     public void deleteIngredient(@PathVariable Integer ingredientId) {
         ingredientService.deleteIngredientById(ingredientId);
     }

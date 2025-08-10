@@ -8,6 +8,7 @@ import java.util.List;
 public interface UserNoteService {
     List<UserNoteDTO> getNotesByUserId(Integer userId);
     List<UserNoteDTO> getNotesByRecipeId(Integer recipeId);
-    UserNote createUserNote(UserNote userNote);
+    void createUserNote(Integer userId, Integer recipeId, String noteText);
     UserNoteDTO getNoteByUserIdAndRecipeId(Integer userId, Integer recipeId);
+    void deleteUserNote(Integer userId, Integer recipeId);
 }

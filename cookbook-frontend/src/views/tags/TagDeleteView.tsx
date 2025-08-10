@@ -5,19 +5,21 @@ import { apiFetch } from '../../api/apiFetch.ts';
 import toast from 'react-hot-toast';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import CancelButton from '../../components/buttons/CancelButton.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function TagDeleteView() {
-  const { id } = useParams<{ id: string }>();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: tag, loading, error } = useFetch<TagDTO>(`/api/tags/${id}`);
+  const { data: tag, loading, error } = useFetch<TagDTO>(`/api/tags/${recipeId}`);
+  useErrorRedirect(error);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
   const handleDelete = async () => {
     try {
-      await apiFetch(`/api/tags/${id}`, 'DELETE');
+      await apiFetch(`/api/tags/${recipeId}`, 'DELETE');
       toast.success('Tag deleted successfully.');
       navigate('/tags');
     } catch (err) {

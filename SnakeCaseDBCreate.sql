@@ -89,8 +89,16 @@ CREATE TABLE recipe_ingredients (
     unit VARCHAR(50),
     is_optional TINYINT(1) NOT NULL,
     PRIMARY KEY (recipe_id, ingredient_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(ingredient_id)
+    CONSTRAINT fk_ri_recipe
+        FOREIGN KEY (recipe_id)
+        REFERENCES recipes(recipe_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_ri_ingredient
+        FOREIGN KEY (ingredient_id)
+        REFERENCES ingredients(ingredient_id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
 );
 
 -- tags table
@@ -106,6 +114,15 @@ CREATE TABLE recipe_tags (
     PRIMARY KEY (recipe_id, tag_id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
     FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
+);
+
+-- password_reset_tokens table
+CREATE TABLE password_reset_tokens (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  token VARCHAR(255) NOT NULL,
+  user_id BIGINT NOT NULL,
+  expiry TIMESTAMP NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- insert sample data

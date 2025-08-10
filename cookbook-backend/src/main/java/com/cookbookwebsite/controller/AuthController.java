@@ -9,9 +9,11 @@ import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RoleRepository;
 import com.cookbookwebsite.repository.UserRepository;
 import com.cookbookwebsite.security.JwtService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,5 +70,36 @@ public class AuthController {
         UserDTO userDTO = new UserDTO(user);
 
         return new LoginResponse(userDTO, token);
+    }
+
+    // Change password
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(
+            @RequestBody ChangePasswordRequest req,
+            Principal principal // comes from JWT-authenticated request
+    ) {
+        // make sure this endpoint is NOT permitAll in SecurityConfig
+        var user = userRepository.findByUserEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPasswordHash())) {
+            return ResponseEntity.badRequest().body("Current password is incorrect.");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
+        userRepository.save(user);
+
+        // (optional) invalidate existing JWTs / rotate secrets if you maintain sessions elsewhere
+
+        return ResponseEntity.ok("Password changed");
+    }
+
+    public static class ChangePasswordRequest {
+        private String currentPassword;
+        private String newPassword;
+        public String getCurrentPassword() { return currentPassword; }
+        public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
     }
 }

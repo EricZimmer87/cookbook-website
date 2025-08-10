@@ -1,15 +1,10 @@
 import { createContext } from 'react';
-
-export type User = {
-  userId: number;
-  userName: string;
-  userEmail: string;
-};
+import type { UserDTO } from '../types/user';
 
 type AuthContextType = {
-  user: User | null;
+  user: UserDTO | null;
   token: string | null;
-  login: (user: User, token: string) => void;
+  login: (user: UserDTO, token: string) => void;
   logout: () => void;
 };
 

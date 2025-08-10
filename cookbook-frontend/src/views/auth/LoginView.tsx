@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth.ts';
 import Button from '../../components/buttons/Button.tsx';
 
@@ -54,6 +54,9 @@ function LoginView() {
       <Button type="submit" className="button-blue">
         Login
       </Button>
+      <br />
+      <br />
+      <Link to="/forgot-password">Forgot your password?</Link>
     </form>
   );
 }

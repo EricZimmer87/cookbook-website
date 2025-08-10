@@ -3,7 +3,8 @@ import { useFetch } from '../../api/useFetch.ts';
 import type { CategoryDTO } from '../../types/category.ts';
 import EditButton from '../../components/buttons/EditButton.tsx';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function CategoriesView() {
   const {
@@ -12,17 +13,20 @@ function CategoriesView() {
     error,
   } = useFetch<CategoryDTO[]>('/api/categories');
 
+  useErrorRedirect(error);
+
   const navigate = useNavigate();
   const location = useLocation();
 
   if (categoriesLoading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
   if (!categories || categories.length === 0) return <p>No categories found.</p>;
 
   return (
     <div>
       <h1>All Categories</h1>
-      <AddButton onClick={() => navigate('/categories/new', { state: { from: location.pathname } })} />
+      <AddButton
+        onClick={() => navigate('/categories/new', { state: { from: location.pathname } })}
+      />
       <table>
         <thead>
           <tr>
@@ -45,9 +49,19 @@ function CategoriesView() {
                 <td>{category.categoryName}</td>
                 <td>{category.recipeCount}</td>
                 <td>
-                  <EditButton onClick={() => navigate(`/categories/${category.categoryId}/edit`, { state: { from: location.pathname } })} />
+                  <EditButton
+                    onClick={() =>
+                      navigate(`/categories/${category.categoryId}/edit`, {
+                        state: { from: location.pathname },
+                      })
+                    }
+                  />
                   <DeleteButton
-                    onClick={() => navigate(`/categories/${category.categoryId}/delete`, { state: { from: location.pathname } })}
+                    onClick={() =>
+                      navigate(`/categories/${category.categoryId}/delete`, {
+                        state: { from: location.pathname },
+                      })
+                    }
                   />
                 </td>
               </tr>

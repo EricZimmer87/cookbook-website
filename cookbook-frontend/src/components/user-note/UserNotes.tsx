@@ -1,18 +1,18 @@
 import type { UserNotesDTO } from '../../types/user-notes.ts';
-import { useAuth } from '../../context/useAuth.ts';
 
 type UserNotesProps = {
   userNote: UserNotesDTO | null;
+  titleUserName?: string; // optional override from parent
 };
 
-function UserNotes({ userNote }: UserNotesProps) {
-  const { user } = useAuth();
+function UserNotes({ userNote, titleUserName }: UserNotesProps) {
+  if (!userNote) return null;
 
-  if (!user || !userNote) return null;
+  const displayName = titleUserName ?? userNote.userName ?? 'User';
 
   return (
     <div className="user-notes">
-      <h2>{user.userName}'s Notes</h2>
+      <h2>{displayName}'s Notes</h2>
       <p>{userNote.noteText}</p>
     </div>
   );
