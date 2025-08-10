@@ -1,10 +1,7 @@
 package com.cookbookwebsite.controller;
 
 import com.cookbookwebsite.dto.tag.TagDTO;
-import com.cookbookwebsite.dto.user.UserDTO;
-import com.cookbookwebsite.model.Role;
 import com.cookbookwebsite.model.Tag;
-import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.service.TagService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
