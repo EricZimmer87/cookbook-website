@@ -3,6 +3,8 @@ package com.cookbookwebsite.service;
 import com.cookbookwebsite.dto.ingredient.IngredientDTO;
 import com.cookbookwebsite.model.Ingredient;
 import com.cookbookwebsite.repository.IngredientRepository;
+import com.cookbookwebsite.repository.RecipeIngredientRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +12,16 @@ import java.util.List;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
-    private final IngredientRepository ingredientRepository;
 
-    public IngredientServiceImpl(IngredientRepository ingredientRepository) {
-        this.ingredientRepository= ingredientRepository;
+    private final IngredientRepository ingredientRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
+
+    public IngredientServiceImpl(IngredientRepository ingredientRepository,
+                                 RecipeIngredientRepository recipeIngredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
     }
 
-    // Get all ingredient DTOs
     @Override
     @Transactional(readOnly = true)
     public List<IngredientDTO> getAllIngredientDTOs() {
@@ -26,7 +31,6 @@ public class IngredientServiceImpl implements IngredientService {
                 .toList();
     }
 
-    // Get ingredientDTO by ingredient ID
     @Override
     @Transactional(readOnly = true)
     public IngredientDTO getIngredientById(Integer ingredientId) {
@@ -35,32 +39,38 @@ public class IngredientServiceImpl implements IngredientService {
         return new IngredientDTO(ingredient);
     }
 
-    // Get tag entity by tag ID
     @Override
     @Transactional(readOnly = true)
-    public Ingredient getIngredientEntityById(Integer id) {
-        return ingredientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ingredient not found."));
+    public Ingredient getIngredientEntityById(Integer ingredientId) {
+        return ingredientRepository.findById(ingredientId)
+                .orElseThrow(() -> new RuntimeException("Ingredient not found with ID: " + ingredientId));
     }
 
-    // Update ingredient
     @Override
     @Transactional
     public Ingredient saveIngredient(Ingredient ingredient) {
         return ingredientRepository.save(ingredient);
     }
 
-    // Create ingredient
     @Override
     @Transactional
     public Ingredient createIngredient(Ingredient ingredient) {
         return ingredientRepository.save(ingredient);
     }
 
-    // Delete ingredient
     @Override
     @Transactional
     public void deleteIngredientById(Integer ingredientId) {
-        ingredientRepository.deleteById(ingredientId);
+        // App-level guard — avoids hitting FK error and lets us return a friendly message
+        if (recipeIngredientRepository.existsByIngredient_IngredientId(ingredientId)) {
+            throw new IllegalStateException("Cannot delete ingredient: it is used by one or more recipes.");
+        }
+
+        try {
+            ingredientRepository.deleteById(ingredientId);
+        } catch (DataIntegrityViolationException ex) {
+            // Safety net in case of race conditions / FK constraints
+            throw new IllegalStateException("Cannot delete ingredient: it is used by one or more recipes.");
+        }
     }
 }

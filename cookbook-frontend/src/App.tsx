@@ -48,7 +48,7 @@ const router = createBrowserRouter([
       { path: '/forbidden', element: <ForbiddenView /> },
       { path: '/not-found', element: <NotFoundView /> },
       { path: '/recipes', element: <RecipesView /> },
-      { path: '/recipes/:id', element: <RecipeDetailView /> },
+      { path: '/recipes/:recipeId', element: <RecipeDetailView /> },
       { path: '/login', element: <LoginView /> },
       { path: '/register', element: <RegisterView /> },
       { path: '/users', element: <UsersView /> },

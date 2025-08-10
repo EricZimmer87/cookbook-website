@@ -1,6 +1,6 @@
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import CancelButton from '../../components/buttons/CancelButton.tsx';
-import { apiFetch } from '../../api/apiFetch.ts';
+import { ApiError, apiFetch } from '../../api/apiFetch.ts';
 import toast from 'react-hot-toast';
 import { useFetch } from '../../api/useFetch.ts';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,8 +27,26 @@ function IngredientDeleteView() {
       toast.success('Ingredient deleted successfully.');
       navigate('/ingredients');
     } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.status === 409) {
+          // friendly FK message from backend
+          toast.error(err.body || 'Cannot delete ingredient: it is used by one or more recipes.');
+          return;
+        }
+        if (err.status === 403) {
+          navigate('/forbidden');
+          return;
+        }
+        if (err.status === 404) {
+          navigate('/not-found');
+          return;
+        }
+        toast.error(err.body || `Error ${err.status}`);
+        return;
+      }
+      // Fallback unknown error
       console.error(err);
-      alert('Failed to delete ingredient.');
+      toast.error('Failed to delete ingredient.');
     }
   };
 

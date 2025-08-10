@@ -8,14 +8,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 type RoleFormData = { roleId: number };
 
 function UserEditRoleView() {
-  const { id } = useParams<{ id: string }>();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const {
     data: user,
     loading: userLoading,
     error: userError,
-  } = useFetch<UserDTO>(`/api/users/${id}`);
+  } = useFetch<UserDTO>(`/api/users/${recipeId}`);
   useErrorRedirect(userError);
 
   const {
@@ -29,7 +29,7 @@ function UserEditRoleView() {
   if (!user || !roles) return <p>Not found.</p>;
 
   const handleSave = async (data: RoleFormData) => {
-    await apiFetch(`/api/users/${id}/role`, 'PUT', data); // payload = { roleId: number }
+    await apiFetch(`/api/users/${recipeId}/role`, 'PUT', data); // payload = { roleId: number }
     navigate(-1);
   };
 

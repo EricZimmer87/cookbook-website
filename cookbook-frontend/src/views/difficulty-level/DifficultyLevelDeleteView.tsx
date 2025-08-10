@@ -8,14 +8,14 @@ import CancelButton from '../../components/buttons/CancelButton.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function DifficultyLevelDeleteView() {
-  const { id } = useParams<{ id: string }>();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const {
     data: difficultyLevel,
     loading: difficultyLevelLoading,
     error: difficultyLevelError,
-  } = useFetch<DifficultyLevelDTO>(`/api/difficulty-levels/${id}`);
+  } = useFetch<DifficultyLevelDTO>(`/api/difficulty-levels/${recipeId}`);
   useErrorRedirect(difficultyLevelError);
 
   if (difficultyLevelLoading) return <p>Loading...</p>;
@@ -23,7 +23,7 @@ function DifficultyLevelDeleteView() {
 
   const handleDelete = async () => {
     try {
-      await apiFetch(`/api/difficulty-levels/${id}`, 'DELETE');
+      await apiFetch(`/api/difficulty-levels/${recipeId}`, 'DELETE');
       toast.success('Difficulty level deleted successfully.');
       navigate('/difficulty-levels');
     } catch (err) {

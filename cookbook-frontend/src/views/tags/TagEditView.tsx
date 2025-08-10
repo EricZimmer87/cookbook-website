@@ -6,17 +6,21 @@ import TagForm from '../../components/forms/tag/TagForm.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function TagEditView() {
-  const { id } = useParams<{ id: string }>();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: tag, loading: tagLoading, error: tagError } = useFetch<TagDTO>(`/api/tags/${id}`);
+  const {
+    data: tag,
+    loading: tagLoading,
+    error: tagError,
+  } = useFetch<TagDTO>(`/api/tags/${recipeId}`);
   useErrorRedirect(tagError);
 
   if (tagLoading) return <p>Loading...</p>;
   if (!tag) return <p>Tag not found.</p>;
 
   const handleSave = async (data: Partial<TagDTO>) => {
-    await apiFetch(`/api/tags/${id}`, 'PUT', data);
+    await apiFetch(`/api/tags/${recipeId}`, 'PUT', data);
     navigate('/tags');
   };
 

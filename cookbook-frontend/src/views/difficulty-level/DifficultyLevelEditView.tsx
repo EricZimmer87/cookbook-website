@@ -6,21 +6,21 @@ import DifficultyLevelForm from '../../components/forms/difficulty-level/Difficu
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function DifficultyLevelEditView() {
-  const { id } = useParams<{ id: string }>();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const {
     data: difficultyLevel,
     loading: difficultyLevelLoading,
     error: difficultyLevelError,
-  } = useFetch<DifficultyLevelDTO>(`/api/difficulty-levels/${id}`);
+  } = useFetch<DifficultyLevelDTO>(`/api/difficulty-levels/${recipeId}`);
   useErrorRedirect(difficultyLevelError);
 
   if (difficultyLevelLoading) return <p>Loading...</p>;
   if (!difficultyLevel) return <p>Difficulty level not found.</p>;
 
   const handleSave = async (data: Partial<DifficultyLevelDTO>) => {
-    await apiFetch(`/api/difficulty-levels/${id}`, 'PUT', data);
+    await apiFetch(`/api/difficulty-levels/${recipeId}`, 'PUT', data);
     navigate('/difficulty-levels');
   };
 

@@ -104,8 +104,14 @@ CREATE TABLE `recipe_ingredients` (
   `is_optional` tinyint(1) NOT NULL,
   PRIMARY KEY (`recipe_id`,`ingredient_id`),
   KEY `ingredient_id` (`ingredient_id`),
-  CONSTRAINT `recipe_ingredients_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`),
-  CONSTRAINT `recipe_ingredients_ibfk_2` FOREIGN KEY (`ingredient_id`) REFERENCES `ingredients` (`ingredient_id`)
+  CONSTRAINT `fk_ri_recipe`
+    FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_ri_ingredient`
+    FOREIGN KEY (`ingredient_id`) REFERENCES `ingredients` (`ingredient_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

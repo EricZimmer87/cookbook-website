@@ -8,10 +8,10 @@ import CancelButton from '../../components/buttons/CancelButton.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function UserDeleteView() {
-  const { id } = useParams<{ id: string }>();
+  const { recipeId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: user, loading, error } = useFetch<UserDTO>(`/api/users/${id}`);
+  const { data: user, loading, error } = useFetch<UserDTO>(`/api/users/${recipeId}`);
   useErrorRedirect(error);
 
   if (loading) return <p>Loading user...</p>;
@@ -19,7 +19,7 @@ function UserDeleteView() {
 
   const handleDelete = async () => {
     try {
-      await apiFetch(`/api/users/${id}`, 'DELETE');
+      await apiFetch(`/api/users/${recipeId}`, 'DELETE');
       toast.success('User deleted successfully!');
       navigate('/users'); // go back to users list
     } catch (err) {

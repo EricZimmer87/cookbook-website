@@ -1,9 +1,15 @@
 package com.cookbookwebsite.service;
 
 import com.cookbookwebsite.dto.usernote.UserNoteDTO;
+import com.cookbookwebsite.model.Recipe;
+import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.model.UserNote;
+import com.cookbookwebsite.model.UserNoteId;
+import com.cookbookwebsite.repository.RecipeRepository;
 import com.cookbookwebsite.repository.UserNoteRepository;
 import java.util.List;
+
+import com.cookbookwebsite.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,9 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserNoteServiceImpl implements UserNoteService {
 
     private final UserNoteRepository userNoteRepository;
+    private final UserRepository userRepository;
+    private final RecipeRepository recipeRepository;
 
-    public UserNoteServiceImpl(UserNoteRepository userNoteRepository) {
+    public UserNoteServiceImpl(
+            UserNoteRepository userNoteRepository,
+            UserRepository userRepository,
+            RecipeRepository recipeRepository) {
         this.userNoteRepository = userNoteRepository;
+        this.userRepository = userRepository;
+        this.recipeRepository = recipeRepository;
     }
 
     // Get notes by user ID
@@ -41,8 +54,18 @@ public class UserNoteServiceImpl implements UserNoteService {
     // Create a user note
     @Override
     @Transactional
-    public UserNote createUserNote(UserNote userNote) {
-        return userNoteRepository.save(userNote);
+    public void createUserNote(Integer userId, Integer recipeId, String noteText) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
+        var note = new UserNote();
+        note.setUser(user);
+        note.setRecipe(recipe);
+        note.setNoteText(noteText);
+        note.setId(new UserNoteId(user.getUserId(), recipe.getRecipeId())); // REQUIRED
+        userNoteRepository.save(note);
     }
 
     @Override
@@ -50,5 +73,12 @@ public class UserNoteServiceImpl implements UserNoteService {
         return userNoteRepository.findByUser_UserIdAndRecipe_RecipeId(userId, recipeId)
                 .map(UserNoteDTO::new)  // uses your existing constructor
                 .orElse(null);
+    }
+
+    // UserNoteServiceImpl.java
+    @Override
+    @Transactional
+    public void deleteUserNote(Integer userId, Integer recipeId) {
+        userNoteRepository.deleteByUser_UserIdAndRecipe_RecipeId(userId, recipeId);
     }
 }
