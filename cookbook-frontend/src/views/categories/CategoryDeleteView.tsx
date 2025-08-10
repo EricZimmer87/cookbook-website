@@ -8,14 +8,14 @@ import CancelButton from '../../components/buttons/CancelButton.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function CategoryDeleteView() {
-  const { recipeId } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const {
     data: category,
     loading,
     error: categoryError,
-  } = useFetch<CategoryDTO>(`/api/categories/${recipeId}`);
+  } = useFetch<CategoryDTO>(`/api/categories/${id}`);
   useErrorRedirect(categoryError);
 
   if (loading) return <p>Loading...</p>;
@@ -23,7 +23,7 @@ function CategoryDeleteView() {
 
   const handleDelete = async () => {
     try {
-      await apiFetch(`/api/categories/${recipeId}`, 'DELETE');
+      await apiFetch(`/api/categories/${id}`, 'DELETE');
       toast.success('Category deleted successfully.');
       navigate('/categories');
     } catch (err) {

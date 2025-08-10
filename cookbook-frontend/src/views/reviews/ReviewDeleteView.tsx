@@ -8,10 +8,10 @@ import CancelButton from '../../components/buttons/CancelButton.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function ReviewDeleteView() {
-  const { recipeId } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: review, loading, error } = useFetch<ReviewDTO>(`/api/reviews/${recipeId}`);
+  const { data: review, loading, error } = useFetch<ReviewDTO>(`/api/reviews/${id}`);
   useErrorRedirect(error);
 
   if (loading) return <p>Loading review...</p>;
@@ -19,7 +19,7 @@ function ReviewDeleteView() {
 
   const handleDelete = async () => {
     try {
-      await apiFetch(`/api/reviews/${recipeId}`, 'DELETE');
+      await apiFetch(`/api/reviews/${id}`, 'DELETE');
       toast.success('Review deleted successfully.');
       navigate(-1);
     } catch (err) {

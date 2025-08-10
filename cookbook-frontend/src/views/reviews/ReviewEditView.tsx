@@ -6,21 +6,21 @@ import ReviewForm from '../../components/forms/review/ReviewForm.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function ReviewEditView() {
-  const { recipeId } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const {
     data: review,
     loading: reviewLoading,
     error: reviewError,
-  } = useFetch<ReviewDTO>(`/api/reviews/${recipeId}`);
+  } = useFetch<ReviewDTO>(`/api/reviews/${id}`);
   useErrorRedirect(reviewError);
 
   if (reviewLoading) return <p>Loading...</p>;
   if (!review) return <p>Review not found.</p>;
 
   const handleSave = async (data: Partial<ReviewDTO>) => {
-    await apiFetch(`/api/reviews/${recipeId}`, 'PUT', data);
+    await apiFetch(`/api/reviews/${id}`, 'PUT', data);
     navigate(`/users/${review.userId}`);
   };
 
