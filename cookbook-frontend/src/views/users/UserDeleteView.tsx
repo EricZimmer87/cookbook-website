@@ -5,15 +5,17 @@ import type { UserDTO } from '../../types/user';
 import toast from 'react-hot-toast';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import CancelButton from '../../components/buttons/CancelButton.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function UserDeleteView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const { data: user, loading, error } = useFetch<UserDTO>(`/api/users/${id}`);
+  useErrorRedirect(error);
 
   if (loading) return <p>Loading user...</p>;
-  if (error || !user) return <p style={{ color: 'red' }}>User not found.</p>;
+  if (!user) return <p style={{ color: 'red' }}>User not found.</p>;
 
   const handleDelete = async () => {
     try {

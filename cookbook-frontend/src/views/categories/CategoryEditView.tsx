@@ -3,12 +3,18 @@ import { useFetch } from '../../api/useFetch.ts';
 import type { CategoryDTO } from '../../types/category.ts';
 import { apiFetch } from '../../api/apiFetch.ts';
 import CategoryForm from '../../components/forms/category/CategoryForm.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function CategoryEditView() {
-  const { id } = useParams<{ id: string }> ();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: category, loading: categoryLoading } = useFetch<CategoryDTO>(`/api/categories/${id}`);
+  const {
+    data: category,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useFetch<CategoryDTO>(`/api/categories/${id}`);
+  useErrorRedirect(categoryError);
 
   if (categoryLoading) return <p>Loading...</p>;
   if (!category) return <p>Category not found.</p>;

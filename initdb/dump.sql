@@ -210,7 +210,12 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-INSERT INTO `reviews` VALUES (1,1,1,5,'Best recipe in the world there ever was!');
+INSERT INTO `reviews` VALUES
+(1, 1, 1, 5,'Best recipe in the world there ever was!'),
+(2, 2, 2, 4, 'Nice flavor. Would make again.'),
+(3, 3, 3, 3, 'Decent. A little bland.'),
+(4, 2, 4, 5, 'Love this homemade ketchup!'),
+(5, 3, 5, 4, 'Very satisfying. Would add more spices next time.');
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +326,13 @@ CREATE TABLE `users_favorites` (
 
 LOCK TABLES `users_favorites` WRITE;
 /*!40000 ALTER TABLE `users_favorites` DISABLE KEYS */;
-INSERT INTO `users_favorites` VALUES (1,1);
+INSERT INTO `users_favorites` VALUES
+(1, 1), -- already there, just to confirm
+(1, 3),
+(2, 2),
+(2, 5),
+(3, 1),
+(3, 4);
 /*!40000 ALTER TABLE `users_favorites` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -349,9 +360,34 @@ CREATE TABLE `users_notes` (
 
 LOCK TABLES `users_notes` WRITE;
 /*!40000 ALTER TABLE `users_notes` DISABLE KEYS */;
+INSERT INTO `users_notes` VALUES
+(1, 1, 'I added garlic powder for more flavor.'),
+(1, 3, 'Used pumpkin puree from scratch.'),
+(2, 2, 'Didn’t have almonds, subbed with cashews.'),
+(2, 4, 'Blended too long - next time, less time.'),
+(3, 5, 'Tried grilling instead of baking - turned out great!');
 /*!40000 ALTER TABLE `users_notes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+DROP TABLE IF EXISTS `password_reset_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `password_reset_tokens` (
+  `token_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expiry_date` datetime NOT NULL,
+  PRIMARY KEY (`token_id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `password_reset_tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -5,6 +5,7 @@ import { apiFetch } from '../../api/apiFetch.ts';
 import toast from 'react-hot-toast';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import CancelButton from '../../components/buttons/CancelButton.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function DifficultyLevelDeleteView() {
   const { id } = useParams<{ id: string }>();
@@ -13,11 +14,12 @@ function DifficultyLevelDeleteView() {
   const {
     data: difficultyLevel,
     loading: difficultyLevelLoading,
-    error
+    error: difficultyLevelError,
   } = useFetch<DifficultyLevelDTO>(`/api/difficulty-levels/${id}`);
+  useErrorRedirect(difficultyLevelError);
 
   if (difficultyLevelLoading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
+  if (difficultyLevelError) return <p>Error</p>;
 
   const handleDelete = async () => {
     try {
@@ -36,12 +38,12 @@ function DifficultyLevelDeleteView() {
       <p>
         Are you sure you want to delete <strong>{difficultyLevel?.difficultyLevelName}</strong>
       </p>
-      <div style={{marginTop: '1rem'}}>
+      <div style={{ marginTop: '1rem' }}>
         <DeleteButton onClick={handleDelete} />
         <CancelButton />
       </div>
     </div>
-  )
+  );
 }
 
 export default DifficultyLevelDeleteView;

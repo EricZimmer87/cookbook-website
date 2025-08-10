@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useFetch } from '../../api/useFetch.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { IngredientDTO } from '../../types/ingredient.ts';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function IngredientDeleteView() {
   const { id } = useParams<{ id: string }>();
@@ -13,14 +14,15 @@ function IngredientDeleteView() {
   const {
     data: ingredient,
     loading: ingredientLoading,
-    error
+    error: ingredientError,
   } = useFetch<IngredientDTO>(`/api/ingredients/${id}`);
+  useErrorRedirect(ingredientError);
 
-  if (ingredientLoading) return <p>Loading...</p>
-  if (error) return <p>Error</p>
+  if (ingredientLoading) return <p>Loading...</p>;
+  if (ingredientError) return <p>Error</p>;
 
   const handleDelete = async () => {
-    try{
+    try {
       await apiFetch(`/api/ingredients/${id}`, 'DELETE');
       toast.success('Ingredient deleted successfully.');
       navigate('/ingredients');
@@ -36,12 +38,12 @@ function IngredientDeleteView() {
       <p>
         Are you sure you want to delete <strong>{ingredient?.ingredientName}</strong>
       </p>
-      <div style={{marginTop: '1rem' }}>
+      <div style={{ marginTop: '1rem' }}>
         <DeleteButton onClick={handleDelete} />
         <CancelButton />
       </div>
     </div>
-  )
+  );
 }
 
 export default IngredientDeleteView;

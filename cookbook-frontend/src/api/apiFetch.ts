@@ -19,7 +19,17 @@ export async function apiFetch<T>(
   if (!response.ok) {
     const errorText = await response.text();
     console.error(`API ${method} ${url} failed:`, errorText);
-    throw new Error(`Error ${response.status}: ${errorText}`);
+
+    switch (response.status) {
+      case 403:
+        window.location.href = '/forbidden';
+        break;
+      case 404:
+        window.location.href = '/not-found';
+        break;
+      default:
+        throw new Error(`Error ${response.status}: ${errorText}`);
+    }
   }
 
   const contentLength = response.headers.get('Content-Length');

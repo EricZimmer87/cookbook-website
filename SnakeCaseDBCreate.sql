@@ -108,6 +108,15 @@ CREATE TABLE recipe_tags (
     FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
 );
 
+-- password_reset_tokens table
+CREATE TABLE password_reset_tokens (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  token VARCHAR(255) NOT NULL,
+  user_id BIGINT NOT NULL,
+  expiry TIMESTAMP NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 -- insert sample data
 -- insert data into roles table
 INSERT INTO roles (role_name)

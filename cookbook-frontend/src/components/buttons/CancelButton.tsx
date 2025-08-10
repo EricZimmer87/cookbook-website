@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from './Button.tsx';
 import { FaXmark } from 'react-icons/fa6';
 
@@ -18,7 +18,7 @@ export default function CancelButton({ type = 'button', onClick }: Props) {
       if (location.state?.from) {
         navigate(location.state.from);
       } else {
-        navigate('/');
+        navigate(-1);
       }
     }
   };

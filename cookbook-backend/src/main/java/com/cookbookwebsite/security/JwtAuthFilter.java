@@ -31,38 +31,36 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
 
-        // If there’s no Authorization: Bearer <token> header, skip authentication.
+        String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Extract the token and decode the user email.
-        jwt = authHeader.substring(7); // Strip "Bearer "
-        userEmail = jwtService.extractUserEmail(jwt);
+        String jwt = authHeader.substring(7);
+        String userEmail = null;
+        try {
+            userEmail = jwtService.extractUserEmail(jwt); // reads subject/claims
+        } catch (Exception ex) {
+            // invalid token -> proceed without auth
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Loads user info from the DB via email.
-            CustomUserDetails userDetails =
-                    (CustomUserDetails) userDetailsService.loadUserByUsername(userEmail);
+            var userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-            // Tells Spring Security “this user is authenticated.”
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-
-            authToken.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            // 🔒 VALIDATE the token against user details (expiry, signature, subject)
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                var authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities() // must include ROLE_ADMIN/ROLE_*
+                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
 
         filterChain.doFilter(request, response);

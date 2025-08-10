@@ -29,6 +29,12 @@ import IngredientEditView from './views/ingredients/IngredientEditView.tsx';
 import IngredientDeleteView from './views/ingredients/IngredientDeleteView.tsx';
 import ReviewDeleteView from './views/reviews/ReviewDeleteView.tsx';
 import ReviewCreateView from './views/reviews/ReviewCreateView.tsx';
+import NotFoundView from './views/errors/NotFoundView.tsx';
+import ForbiddenView from './views/errors/ForbiddenView.tsx';
+import ForgotPasswordView from './views/forgot-password/ForgotPasswordView.tsx';
+import ResetPasswordView from './views/forgot-password/ResetPasswordView.tsx';
+import ChangePasswordView from './views/auth/ChangePasswordView.tsx';
+import UserEditRoleView from './views/users/UserEditRoleView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,15 +42,21 @@ const router = createBrowserRouter([
     element: <Layout />, // Navbar is here
     children: [
       { index: true, element: <h1>Home Page</h1> },
-      { path: 'recipes', element: <RecipesView /> },
-      { path: 'recipes/:id', element: <RecipeDetailView /> },
-      { path: 'login', element: <LoginView /> },
-      { path: 'register', element: <RegisterView /> },
-      { path: 'users', element: <UsersView /> },
+      { path: '/forgot-password', element: <ForgotPasswordView /> },
+      { path: '/reset-password', element: <ResetPasswordView /> },
+      { path: '/auth/change-password', element: <ChangePasswordView /> },
+      { path: '/forbidden', element: <ForbiddenView /> },
+      { path: '/not-found', element: <NotFoundView /> },
+      { path: '/recipes', element: <RecipesView /> },
+      { path: '/recipes/:id', element: <RecipeDetailView /> },
+      { path: '/login', element: <LoginView /> },
+      { path: '/register', element: <RegisterView /> },
+      { path: '/users', element: <UsersView /> },
       { path: '/users/:id', element: <UserDetailView /> },
       { path: '/users/:id/edit', element: <UserEditView /> },
       { path: '/users/:id/delete', element: <UserDeleteView /> },
       { path: '/users/:id/profile', element: <UserProfileView /> },
+      { path: '/users/:id/edit/role', element: <UserEditRoleView /> },
       { path: '/reviews/:id/edit', element: <ReviewEditView /> },
       { path: '/reviews/:id/delete', element: <ReviewDeleteView /> },
       { path: '/reviews/:recipeId/new', element: <ReviewCreateView /> },
@@ -64,6 +76,7 @@ const router = createBrowserRouter([
       { path: '/ingredients/new', element: <IngredientCreateView /> },
       { path: '/ingredients/:id/edit', element: <IngredientEditView /> },
       { path: '/ingredients/:id/delete', element: <IngredientDeleteView /> },
+      { path: '*', element: <NotFoundView /> },
     ],
   },
 ]);

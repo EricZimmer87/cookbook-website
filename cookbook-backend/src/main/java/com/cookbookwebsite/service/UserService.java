@@ -4,6 +4,7 @@ import com.cookbookwebsite.dto.user.UserDTO;
 import com.cookbookwebsite.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     List<UserDTO> getAllUserDTOs();
@@ -12,4 +13,6 @@ public interface UserService {
     User getUserEntityById(Integer id);
     User saveUser(User user);
     void deleteUser(Integer id);
+    Optional<User> findByEmail(String email);
+    void updatePassword(User user, String newPassword);
 }

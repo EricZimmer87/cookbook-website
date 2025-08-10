@@ -3,6 +3,7 @@ import RecipeCard from '../../components/recipe-card';
 import type { RecipeDTO } from '../../types/recipe.ts';
 import { useState } from 'react';
 import Button from '../../components/buttons/Button.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 // Normalize for de-duplication but preserve original casing
 function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): string[] {
@@ -24,6 +25,7 @@ function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): str
 
 function RecipesView() {
   const { data: recipes, loading: recipesLoading, error } = useFetch<RecipeDTO[]>('/api/recipes');
+  useErrorRedirect(error);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<'name-asc' | 'name-desc'>('name-asc');
@@ -37,51 +39,51 @@ function RecipesView() {
 
   // Extract all filter options (preserve case)
   const allTags = getUniqueValuesPreserveCase(
-    (recipes ?? []).flatMap(recipe => recipe.recipeTags?.map(tag => tag.tagName) ?? [])
+    (recipes ?? []).flatMap((recipe) => recipe.recipeTags?.map((tag) => tag.tagName) ?? []),
   );
 
   const allIngredients = getUniqueValuesPreserveCase(
-    (recipes ?? []).flatMap(recipe => recipe.recipeIngredients.map(ing => ing.ingredientName))
+    (recipes ?? []).flatMap((recipe) => recipe.recipeIngredients.map((ing) => ing.ingredientName)),
   );
 
   const allCategories = getUniqueValuesPreserveCase(
-    (recipes ?? []).map(recipe => recipe.categoryName)
+    (recipes ?? []).map((recipe) => recipe.categoryName),
   );
 
   const allDifficulties = getUniqueValuesPreserveCase(
-    (recipes ?? []).map(recipe => recipe.difficultyLevel)
+    (recipes ?? []).map((recipe) => recipe.difficultyLevel),
   );
 
   // Apply filters
   let displayedRecipes = recipes ?? [];
 
   if (searchTerm.trim() !== '') {
-    displayedRecipes = displayedRecipes.filter(recipe =>
-      recipe.recipeName.toLowerCase().includes(searchTerm.toLowerCase())
+    displayedRecipes = displayedRecipes.filter((recipe) =>
+      recipe.recipeName.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }
 
   if (selectedTag !== 'all') {
-    displayedRecipes = displayedRecipes.filter(recipe =>
-      recipe.recipeTags?.some(tag => tag.tagName === selectedTag)
+    displayedRecipes = displayedRecipes.filter((recipe) =>
+      recipe.recipeTags?.some((tag) => tag.tagName === selectedTag),
     );
   }
 
   if (selectedIngredient !== 'all') {
-    displayedRecipes = displayedRecipes.filter(recipe =>
-      recipe.recipeIngredients.some(ing => ing.ingredientName === selectedIngredient)
+    displayedRecipes = displayedRecipes.filter((recipe) =>
+      recipe.recipeIngredients.some((ing) => ing.ingredientName === selectedIngredient),
     );
   }
 
   if (selectedCategory !== 'all') {
-    displayedRecipes = displayedRecipes.filter(recipe =>
-      recipe.categoryName === selectedCategory
+    displayedRecipes = displayedRecipes.filter(
+      (recipe) => recipe.categoryName === selectedCategory,
     );
   }
 
   if (selectedDifficulty !== 'all') {
-    displayedRecipes = displayedRecipes.filter(recipe =>
-      recipe.difficultyLevel === selectedDifficulty
+    displayedRecipes = displayedRecipes.filter(
+      (recipe) => recipe.difficultyLevel === selectedDifficulty,
     );
   }
 
@@ -104,29 +106,48 @@ function RecipesView() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        <select value={sortOption} onChange={(e) => setSortOption(e.target.value as 'name-asc' | 'name-desc')}>
+        <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value as 'name-asc' | 'name-desc')}
+        >
           <option value="name-asc">Sort A–Z</option>
           <option value="name-desc">Sort Z–A</option>
         </select>
 
         <select value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>
           <option value="all">All Tags</option>
-          {allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}
+          {allTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
         </select>
 
         <select value={selectedIngredient} onChange={(e) => setSelectedIngredient(e.target.value)}>
           <option value="all">All Ingredients</option>
-          {allIngredients.map(ing => <option key={ing} value={ing}>{ing}</option>)}
+          {allIngredients.map((ing) => (
+            <option key={ing} value={ing}>
+              {ing}
+            </option>
+          ))}
         </select>
 
         <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
           <option value="all">All Categories</option>
-          {allCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+          {allCategories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
 
         <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)}>
           <option value="all">All Difficulties</option>
-          {allDifficulties.map(diff => <option key={diff} value={diff}>{diff}</option>)}
+          {allDifficulties.map((diff) => (
+            <option key={diff} value={diff}>
+              {diff}
+            </option>
+          ))}
         </select>
 
         <Button
@@ -141,11 +162,10 @@ function RecipesView() {
         >
           Reset Filters
         </Button>
-
       </div>
 
       {displayedRecipes.length > 0 ? (
-        displayedRecipes.map(recipe => (
+        displayedRecipes.map((recipe) => (
           <RecipeCard key={recipe.recipeId} recipe={recipe} clickable={true} showReviews={false} />
         ))
       ) : (

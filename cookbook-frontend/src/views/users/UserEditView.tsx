@@ -3,13 +3,25 @@ import { useFetch } from '../../api/useFetch';
 import { apiFetch } from '../../api/apiFetch'; // POST/PUT helper
 import type { RoleDTO, UserDTO } from '../../types/user';
 import UserForm from '../../components/forms/user/UserForm';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function UserEditView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: user, loading: userLoading } = useFetch<UserDTO>(`/api/users/${id}`);
-  const { data: roles, loading: rolesLoading } = useFetch<RoleDTO[]>('/api/roles');
+  const {
+    data: user,
+    loading: userLoading,
+    error: userError,
+  } = useFetch<UserDTO>(`/api/users/${id}`);
+  useErrorRedirect(userError);
+  
+  const {
+    data: roles,
+    loading: rolesLoading,
+    error: rolesError,
+  } = useFetch<RoleDTO[]>('/api/roles');
+  useErrorRedirect(rolesError);
 
   if (userLoading || rolesLoading) return <p>Loading...</p>;
   if (!user || !roles) return <p>User or roles not found.</p>;

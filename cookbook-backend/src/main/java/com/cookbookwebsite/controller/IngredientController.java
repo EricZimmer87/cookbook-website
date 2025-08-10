@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
-@PreAuthorize("hasRole('ADMIN', 'CONTRIBUTOR')")
+@PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
 public class IngredientController {
     private final IngredientService ingredientService;
 

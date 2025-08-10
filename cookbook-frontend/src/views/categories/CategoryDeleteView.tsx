@@ -5,15 +5,21 @@ import { apiFetch } from '../../api/apiFetch.ts';
 import toast from 'react-hot-toast';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import CancelButton from '../../components/buttons/CancelButton.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function CategoryDeleteView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: category, loading, error } = useFetch<CategoryDTO>(`/api/categories/${id}`);
+  const {
+    data: category,
+    loading,
+    error: categoryError,
+  } = useFetch<CategoryDTO>(`/api/categories/${id}`);
+  useErrorRedirect(categoryError);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
+  if (categoryError) return <p>Error</p>;
 
   const handleDelete = async () => {
     try {

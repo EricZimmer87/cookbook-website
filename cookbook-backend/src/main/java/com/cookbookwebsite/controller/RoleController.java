@@ -3,6 +3,7 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.dto.role.RoleDTO;
 import com.cookbookwebsite.model.Role;
 import com.cookbookwebsite.service.RoleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class RoleController {
         return roleService.getAllRoleDTOs();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Role createRole(@RequestBody Role role) {
         return roleService.createRole(role);

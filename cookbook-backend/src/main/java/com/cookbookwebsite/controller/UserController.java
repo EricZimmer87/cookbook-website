@@ -1,12 +1,14 @@
 package com.cookbookwebsite.controller;
 
 import com.cookbookwebsite.dto.user.UserDTO;
-import com.cookbookwebsite.model.Role;
 import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RoleRepository;
 import com.cookbookwebsite.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.cookbookwebsite.dto.user.UserProfileUpdateRequest;
+import com.cookbookwebsite.dto.user.ChangeRoleRequest;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -43,25 +45,31 @@ public class UserController {
     }
 
     // Update user (PUT)
+    // Only self or admin; cannot change role here
     @PreAuthorize("#id == principal.userId or hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
-        User user = userService.getUserEntityById(id); // Return the full entity
+    public UserDTO updateUser(
+            @PathVariable Integer id,
+            @Valid @RequestBody UserProfileUpdateRequest req
+    ) {
+        var user = userService.getUserEntityById(id);
+        if (req.userName() != null) user.setUserName(req.userName());
+        if (req.userEmail() != null) user.setUserEmail(req.userEmail());
+        return new UserDTO(userService.saveUser(user));
+    }
 
-        if (updatedUser.getUserName() != null) {
-            user.setUserName(updatedUser.getUserName());
-        }
-        if (updatedUser.getUserEmail() != null) {
-            user.setUserEmail(updatedUser.getUserEmail());
-        }
-        if (updatedUser.getRole() != null && updatedUser.getRole().getRoleId() != null) {
-            Role role = roleRepository.findById(updatedUser.getRole().getRoleId())
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
-            user.setRole(role);
-        }
-
-        User savedUser = userService.saveUser(user);
-        return new UserDTO(savedUser);
+    // Admin-only role change
+    @PreAuthorize("hasRole('ADMIN') and #id != principal.userId")
+    @PutMapping("/{id}/role")
+    public UserDTO changeRole(
+            @PathVariable Integer id,
+            @Valid @RequestBody ChangeRoleRequest req
+    ) {
+        var user = userService.getUserEntityById(id);
+        var role = roleRepository.findById(req.roleId())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.setRole(role);
+        return new UserDTO(userService.saveUser(user));
     }
 
     // Delete user (DELETE)

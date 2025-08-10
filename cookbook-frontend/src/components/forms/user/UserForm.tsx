@@ -10,7 +10,7 @@ type UserFormProps = {
   roles: RoleDTO[]; // available roles to choose
 };
 
-function UserForm({ defaultValues = {}, onSubmit, roles }: UserFormProps) {
+function UserForm({ defaultValues = {}, onSubmit }: UserFormProps) {
   const {
     register,
     handleSubmit,
@@ -50,19 +50,6 @@ function UserForm({ defaultValues = {}, onSubmit, roles }: UserFormProps) {
           type="email"
         />
         {errors.userEmail && <p className="error">{errors.userEmail.message}</p>}
-      </div>
-
-      <div className="form-group">
-        <label>Role</label>
-        <select {...register('role.roleId', { required: true })}>
-          <option value="">-- Select Role --</option>
-          {roles.map((role) => (
-            <option key={role.roleId} value={role.roleId}>
-              {role.roleId} {role.roleName}
-            </option>
-          ))}
-        </select>
-        {errors.role?.roleId && <p className="error">Role is required</p>}
       </div>
 
       <SaveButton type="submit" />

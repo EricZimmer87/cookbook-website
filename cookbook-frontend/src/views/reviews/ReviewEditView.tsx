@@ -3,12 +3,18 @@ import { useFetch } from '../../api/useFetch.ts';
 import type { ReviewDTO } from '../../types/review.ts';
 import { apiFetch } from '../../api/apiFetch.ts';
 import ReviewForm from '../../components/forms/review/ReviewForm.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 
 function ReviewEditView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: review, loading: reviewLoading } = useFetch<ReviewDTO>(`/api/reviews/${id}`);
+  const {
+    data: review,
+    loading: reviewLoading,
+    error: reviewError,
+  } = useFetch<ReviewDTO>(`/api/reviews/${id}`);
+  useErrorRedirect(reviewError);
 
   if (reviewLoading) return <p>Loading...</p>;
   if (!review) return <p>Review not found.</p>;

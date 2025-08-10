@@ -8,5 +8,7 @@ import java.util.List;
 public interface UserFavoriteService {
     List<UserFavoriteDTO> getFavoritesByUserId(Integer userId);
     List<UserFavoriteDTO> getFavoritesByRecipeId(Integer recipeId);
-    UserFavorite createUserFavorite(UserFavorite userFavorite);
+    UserFavorite createUserFavorite(Integer userId, Integer recipeId);
+    boolean isRecipeFavoritedByUser(Integer userId, Integer recipeId);
+    void removeUserFavorite(Integer userId, Integer recipeId);
 }

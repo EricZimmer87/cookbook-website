@@ -1,5 +1,5 @@
 import type { ReviewDTO } from '../../types/review.ts';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth.ts';
 import EditButton from '../buttons/EditButton.tsx';
 import DeleteButton from '../buttons/DeleteButton.tsx';
@@ -29,9 +29,14 @@ function Reviews({ reviews, recipeId }: ReviewsProps) {
   return (
     <div className="recipe-reviews">
       <h4>Reviews:</h4>
-
       {user && !hasUserReviewed && (
-        <AddButton onClick={() => navigate(`/reviews/${recipeId}/new`, { state: { from: location.pathname } })} />
+        <AddButton
+          onClick={() =>
+            navigate(`/reviews/${recipeId}/new`, { state: { from: location.pathname } })
+          }
+        >
+          Add Review
+        </AddButton>
       )}
 
       {sortedReviews.length > 0 ? (
@@ -41,8 +46,20 @@ function Reviews({ reviews, recipeId }: ReviewsProps) {
               <strong>{review.userName}</strong>: {review.reviewText} ({review.score}/5)
               {user && review.userId === user.userId && (
                 <>
-                  <EditButton onClick={() => navigate(`/reviews/${review.reviewId}/edit`, { state: { from: location.pathname } })} />
-                  <DeleteButton onClick={() => navigate(`/reviews/${review.reviewId}/delete`, { state: { from: location.pathname } })} />
+                  <EditButton
+                    onClick={() =>
+                      navigate(`/reviews/${review.reviewId}/edit`, {
+                        state: { from: location.pathname },
+                      })
+                    }
+                  />
+                  <DeleteButton
+                    onClick={() =>
+                      navigate(`/reviews/${review.reviewId}/delete`, {
+                        state: { from: location.pathname },
+                      })
+                    }
+                  />
                 </>
               )}
             </li>

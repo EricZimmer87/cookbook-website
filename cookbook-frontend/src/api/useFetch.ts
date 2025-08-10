@@ -28,15 +28,17 @@ export function useFetch<T>(url: string | null) {
           },
         });
 
-        if (response.status === 204 || response.status === 403) {
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status} ${errorText}`);
+        }
+
+        const contentLength = response.headers.get('Content-Length');
+        if (response.status === 204 || contentLength === '0') {
           setData(null);
         } else {
           const json = await response.json();
-          if (!response.ok) {
-            setError(`HTTP error! status: ${response.status}`);
-          } else {
-            setData(json);
-          }
+          setData(json);
         }
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {

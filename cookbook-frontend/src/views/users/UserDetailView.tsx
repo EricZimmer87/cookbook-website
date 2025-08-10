@@ -6,44 +6,50 @@ import EditButton from '../../components/buttons/EditButton.tsx';
 import type { RecipeDTO } from '../../types/recipe.ts';
 import type { FavoriteDTO } from '../../types/favorite.ts';
 import DeleteButton from '../../components/buttons/DeleteButton.tsx';
+import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
+import Button from '../../components/buttons/Button.tsx';
+import { useAuth } from '../../context/useAuth.ts';
 
 function UserDetailView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user: authUser } = useAuth();
 
   const {
     data: user,
     loading: userLoading,
     error: userError,
   } = useFetch<UserDTO>(`/api/users/${id}`);
+  useErrorRedirect(userError);
 
   const {
     data: reviews,
     loading: reviewsLoading,
     error: reviewsError,
   } = useFetch<ReviewDTO[]>(`/api/reviews/user/${id}`);
+  useErrorRedirect(reviewsError);
 
   const {
     data: recipes,
     loading: recipesLoading,
     error: recipesError,
   } = useFetch<RecipeDTO[]>(`/api/recipes?userId=${id}`);
+  useErrorRedirect(recipesError);
 
   const {
     data: favorites,
     loading: favoritesLoading,
     error: favoritesError,
   } = useFetch<FavoriteDTO[]>(`/api/user-favorites/user/${id}`);
+  useErrorRedirect(favoritesError);
 
   // Combine loading states
   if (userLoading || reviewsLoading || recipesLoading || favoritesLoading)
     return <p>Loading user...</p>;
-
-  // Combine error states
-  if (userError || reviewsError || recipesError || favoritesError)
-    return <p style={{ color: 'red' }}>Error: {userError || reviewsError}</p>;
-
   if (!user) return <p>User not found.</p>;
+
+  const pageUserId = Number(id);
+  const isAdmin = authUser?.role?.roleName?.toLowerCase() === 'admin';
 
   return (
     <div>
@@ -54,12 +60,25 @@ function UserDetailView() {
       <Link to={`/users/${user.userId}/edit`}>
         <EditButton />
       </Link>
+      {/* Only show for same user */}
+      {authUser && authUser.userId === pageUserId && (
+        <Button className="button-blue" onClick={() => navigate('/auth/change-password')}>
+          Change password
+        </Button>
+      )}
+
+      {/* Edit Role - Admin Only */}
+      {isAdmin && authUser?.userId !== pageUserId && (
+        <Button className="button-blue" onClick={() => navigate(`/users/${user.userId}/edit/role`)}>
+          Change Role
+        </Button>
+      )}
 
       <h2>{user.userName}'s Favorite Recipes</h2>
       {favorites && favorites.length > 0 ? (
         <ul>
           {favorites.map((favorite) => (
-            <li key={favorite.userId}>
+            <li key={`${favorite.userId}-${favorite.recipeId}`}>
               <Link to={`/recipes/${favorite.recipeId}`}>{favorite.recipeName}</Link>
             </li>
           ))}
