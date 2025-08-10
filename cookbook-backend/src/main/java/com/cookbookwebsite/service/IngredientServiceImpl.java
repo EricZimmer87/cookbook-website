@@ -1,6 +1,7 @@
 package com.cookbookwebsite.service;
 
 import com.cookbookwebsite.dto.ingredient.IngredientDTO;
+import com.cookbookwebsite.exception.ResourceInUseException;
 import com.cookbookwebsite.model.Ingredient;
 import com.cookbookwebsite.repository.IngredientRepository;
 import com.cookbookwebsite.repository.RecipeIngredientRepository;
@@ -63,14 +64,14 @@ public class IngredientServiceImpl implements IngredientService {
     public void deleteIngredientById(Integer ingredientId) {
         // App-level guard — avoids hitting FK error and lets us return a friendly message
         if (recipeIngredientRepository.existsByIngredient_IngredientId(ingredientId)) {
-            throw new IllegalStateException("Cannot delete ingredient: it is used by one or more recipes.");
+            throw new ResourceInUseException("Cannot delete ingredient: it is used by one or more recipes.");
         }
 
         try {
             ingredientRepository.deleteById(ingredientId);
         } catch (DataIntegrityViolationException ex) {
             // Safety net in case of race conditions / FK constraints
-            throw new IllegalStateException("Cannot delete ingredient: it is used by one or more recipes.");
+            throw new ResourceInUseException("Cannot delete ingredient: it is used by one or more recipes.");
         }
     }
 }
