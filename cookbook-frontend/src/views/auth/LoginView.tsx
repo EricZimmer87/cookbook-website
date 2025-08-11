@@ -20,18 +20,32 @@ function LoginView() {
       });
 
       if (!response.ok) {
-        console.error('Login failed');
-        alert('Invalid login');
+        // Try to read the JSON body for a nicer message
+        let msg = 'Invalid email or password.';
+        try {
+          const err = await response.json();
+          if (response.status === 403 && err?.code === 'ACCOUNT_BANNED') {
+            msg = err.message || 'Your account has been banned.';
+          }
+        } catch {
+          // ignore parse errors; keep default msg
+        }
+        alert(msg);
         return;
       }
 
       const { user, token } = await response.json();
+
+      // Make sure this matches what the rest of your app reads
+      localStorage.setItem('accessToken', token);
+
+      // keep your existing auth context call if needed
       login(user, token);
 
       navigate('/'); // redirect to home
     } catch (err) {
       console.error(err);
-      alert('Invalid login');
+      alert('Invalid email or password.');
     }
   };
 

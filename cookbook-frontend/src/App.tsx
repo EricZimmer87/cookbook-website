@@ -35,6 +35,7 @@ import ForgotPasswordView from './views/forgot-password/ForgotPasswordView.tsx';
 import ResetPasswordView from './views/forgot-password/ResetPasswordView.tsx';
 import ChangePasswordView from './views/auth/ChangePasswordView.tsx';
 import UserEditRoleView from './views/users/UserEditRoleView.tsx';
+import RecipeCreateView from './views/recipes/RecipeCreateView.tsx';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { path: '/forbidden', element: <ForbiddenView /> },
       { path: '/not-found', element: <NotFoundView /> },
       { path: '/recipes', element: <RecipesView /> },
+      { path: '/recipes/new', element: <RecipeCreateView /> },
       { path: '/recipes/:recipeId', element: <RecipeDetailView /> },
       { path: '/login', element: <LoginView /> },
       { path: '/register', element: <RegisterView /> },

@@ -8,4 +8,5 @@ export interface UserDTO {
   userName: string;
   userEmail: string;
   role: RoleDTO;
+  banned: boolean;
 }

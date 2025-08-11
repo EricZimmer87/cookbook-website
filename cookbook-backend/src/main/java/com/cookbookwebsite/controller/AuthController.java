@@ -9,9 +9,11 @@ import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RoleRepository;
 import com.cookbookwebsite.repository.UserRepository;
 import com.cookbookwebsite.security.JwtService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -57,10 +59,20 @@ public class AuthController {
         return "User registered successfully!";
     }
 
+    // Login
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        User user = userRepository.findByUserEmail(request.getUserEmail())
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        var user = userRepository.findByUserEmail(request.getUserEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password."));
+
+        if (user.isBanned()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of(
+                            "code", "ACCOUNT_BANNED",
+                            "message", "Your account has been banned.",
+                            "timestamp", System.currentTimeMillis()
+                    ));
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid email or password.");
@@ -69,7 +81,7 @@ public class AuthController {
         String token = jwtService.generateToken(user.getUserEmail());
         UserDTO userDTO = new UserDTO(user);
 
-        return new LoginResponse(userDTO, token);
+        return ResponseEntity.ok(new LoginResponse(userDTO, token));
     }
 
     // Change password

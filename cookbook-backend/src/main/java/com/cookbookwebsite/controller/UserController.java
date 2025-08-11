@@ -5,6 +5,7 @@ import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RoleRepository;
 import com.cookbookwebsite.repository.UserRepository;
 import com.cookbookwebsite.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.cookbookwebsite.dto.user.UserProfileUpdateRequest;
@@ -77,13 +78,6 @@ public class UserController {
         return new UserDTO(userService.saveUser(user));
     }
 
-    // Delete user (DELETE)
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
-    }
-
     @PreAuthorize("hasAnyRole('ADMIN','CONTRIBUTOR')")
     @GetMapping("/by-roles")
     public List<UserDTO> getUsersByRoles(@RequestParam List<String> roles) {
@@ -94,5 +88,29 @@ public class UserController {
 
         var users = userRepository.findByRole_RoleNameIn(normalized);
         return users.stream().map(UserDTO::new).toList();
+    }
+
+    // Delete user
+    @PreAuthorize("hasRole('ADMIN') and #id != principal.userId")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Ban user
+    @PreAuthorize("hasRole('ADMIN') and #id != principal.userId")
+    @PutMapping("/{id}/ban")
+    public ResponseEntity<Void> banUser(@PathVariable Integer id) {
+        userService.banUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Unban user
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/unban")
+    public ResponseEntity<Void> unbanUser(@PathVariable Integer id) {
+        userService.unbanUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

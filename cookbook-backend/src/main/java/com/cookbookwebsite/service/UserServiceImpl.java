@@ -1,9 +1,13 @@
 package com.cookbookwebsite.service;
 
 import com.cookbookwebsite.dto.user.UserDTO;
+import com.cookbookwebsite.exception.EntityNotFoundException;
+import com.cookbookwebsite.exception.ResourceInUseException;
 import com.cookbookwebsite.model.User;
+import com.cookbookwebsite.repository.RecipeRepository;
 import com.cookbookwebsite.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +18,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RecipeRepository recipeRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RecipeRepository recipeRepository) {
         this.userRepository = userRepository;
+        this.recipeRepository = recipeRepository;
     }
 
     // Get all users
@@ -79,7 +85,36 @@ public class UserServiceImpl implements UserService {
     // Delete user
     @Override
     @Transactional
-    public void deleteUser(Integer id) {
-        userRepository.deleteById(id);
+    public void deleteUser(Integer userId) {
+        // App-level guard — avoids hitting FK error and returns a user-friendly message
+        if (recipeRepository.existsByUser_UserId(userId)) {
+            throw new ResourceInUseException("Cannot delete user: they have existing recipes. Use ban functionality instead.");
+        }
+        try {
+            userRepository.deleteById(userId);
+        } catch (DataIntegrityViolationException ex) {
+            // Safety net in case of race conditions / FK constraints
+            throw new ResourceInUseException("Cannot delete user: they have existing data. Use ban functionality instead.");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void banUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
+        user.setBanned(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void unbanUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
+        user.setBanned(false);
+        userRepository.save(user);
     }
 }

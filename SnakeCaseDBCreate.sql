@@ -33,6 +33,7 @@ CREATE TABLE users (
     user_name VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+    is_banned tinyint(1) NOT NULL DEFAULT 0,
     FOREIGN KEY (role_id) REFERENCES roles(role_id)
 );
 

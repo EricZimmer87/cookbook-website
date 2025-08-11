@@ -287,6 +287,7 @@ CREATE TABLE `users` (
   `user_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
+  `is_banned` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_email` (`user_email`),
   KEY `role_id` (`role_id`),
@@ -301,10 +302,10 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 
-INSERT INTO `users` (user_id, role_id, user_name, user_email, password_hash) VALUES
-  (1, 1, 'admin', 'admin@example.com', '$2a$10$WqRwwG0AhXCx3lLY6J8vsemrYSYumWo25dMwIVi9tuugmhnuaO3N.'),
-  (2, 2, 'contributor', 'contributor@example.com', '$2a$10$aVFflvVqJKLI5kEsnPetH.0PbryD.rtQaKXXl8jCBPgCnqRB9sfku'),
-  (3, 3, 'viewer', 'viewer@example.com', '$2a$10$XpNd4V5hOgoi/b9bZmW9Y.PVZ/uSPaWAXdKs2TJJh6FHfC/h/TOg.');
+INSERT INTO `users` (user_id, role_id, user_name, user_email, password_hash, is_banned) VALUES
+  (1, 1, 'admin', 'admin@example.com', '$2a$10$WqRwwG0AhXCx3lLY6J8vsemrYSYumWo25dMwIVi9tuugmhnuaO3N.', 0),
+  (2, 2, 'contributor', 'contributor@example.com', '$2a$10$aVFflvVqJKLI5kEsnPetH.0PbryD.rtQaKXXl8jCBPgCnqRB9sfku', 0),
+  (3, 3, 'viewer', 'viewer@example.com', '$2a$10$XpNd4V5hOgoi/b9bZmW9Y.PVZ/uSPaWAXdKs2TJJh6FHfC/h/TOg.', 0);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

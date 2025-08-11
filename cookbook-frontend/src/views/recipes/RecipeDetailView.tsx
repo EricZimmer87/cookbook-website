@@ -125,7 +125,7 @@ function RecipeDetailView() {
   };
 
   // UI guards
-  if (recipeLoading) return <p>Loading…</p>;
+  if (recipeLoading) return <p>Loading...</p>;
   if (!recipe) return <p>Recipe not found.</p>;
 
   const viewingSelf = selectedUserId != null && selectedUserId === authUser?.userId;

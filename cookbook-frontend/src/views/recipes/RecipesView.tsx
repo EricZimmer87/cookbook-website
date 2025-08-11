@@ -4,6 +4,8 @@ import type { RecipeDTO } from '../../types/recipe.ts';
 import { useState } from 'react';
 import Button from '../../components/buttons/Button.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
+import AddButton from '../../components/buttons/AddButton.tsx';
+import { useNavigate } from 'react-router-dom';
 
 // Normalize for de-duplication but preserve original casing
 function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): string[] {
@@ -26,6 +28,7 @@ function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): str
 function RecipesView() {
   const { data: recipes, loading: recipesLoading, error } = useFetch<RecipeDTO[]>('/api/recipes');
   useErrorRedirect(error);
+  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<'name-asc' | 'name-desc'>('name-asc');
@@ -97,6 +100,7 @@ function RecipesView() {
   return (
     <div>
       <h1>All Recipes</h1>
+      <AddButton onClick={() => navigate('/recipes/new')}>Add Recipe</AddButton>
 
       <div style={{ marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
         <input

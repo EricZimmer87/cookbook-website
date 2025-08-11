@@ -29,7 +29,6 @@ public class GlobalExceptionHandler {
                         "Operation violates data constraints"));
     }
 
-    // Keep your existing IllegalStateException handler if needed
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)

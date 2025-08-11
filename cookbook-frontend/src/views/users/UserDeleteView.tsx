@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiFetch } from '../../api/apiFetch';
+import { ApiError, apiFetch } from '../../api/apiFetch';
 import { useFetch } from '../../api/useFetch';
 import type { UserDTO } from '../../types/user';
 import toast from 'react-hot-toast';
@@ -23,8 +23,25 @@ function UserDeleteView() {
       toast.success('User deleted successfully!');
       navigate('/users'); // go back to users list
     } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.status === 409) {
+          toast.error(err.body || 'Cannot delete user: its data is in use.');
+          return;
+        }
+        if (err.status === 403) {
+          navigate('/forbidden');
+          return;
+        }
+        if (err.status === 404) {
+          navigate('/not-found');
+          return;
+        }
+        toast.error(err.body || `Error ${err.status}`);
+        return;
+      }
+      // Fallback unknown error
       console.error(err);
-      alert('Failed to delete user.');
+      toast.error('Failed to delete user.');
     }
   };
 

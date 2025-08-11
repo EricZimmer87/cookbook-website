@@ -15,4 +15,6 @@ public interface UserService {
     void deleteUser(Integer id);
     Optional<User> findByEmail(String email);
     void updatePassword(User user, String newPassword);
+    public void banUser(Integer userId);
+    public void unbanUser(Integer userId);
 }

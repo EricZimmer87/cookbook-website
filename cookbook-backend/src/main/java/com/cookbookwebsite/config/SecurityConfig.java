@@ -1,9 +1,12 @@
 package com.cookbookwebsite.config;
 
+import com.cookbookwebsite.repository.UserRepository;
+import com.cookbookwebsite.security.BannedUserFilter;
 import com.cookbookwebsite.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,11 +28,17 @@ public class SecurityConfig {
 
     // Disables CSRF protection. CSRF isn’t needed in stateless APIs (like ones using JWTs).
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthFilter jwtAuthFilter,
+            UserRepository userRepository) throws Exception {
+        var bannedUserFilter = new BannedUserFilter(userRepository);
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Recipes
                         .requestMatchers("/api/recipes").permitAll()
@@ -45,7 +54,8 @@ public class SecurityConfig {
                         // Everything else default (adjust as needed)
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(bannedUserFilter, JwtAuthFilter.class);
 
         return http.build();
     }

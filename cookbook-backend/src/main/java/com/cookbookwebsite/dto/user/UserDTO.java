@@ -8,12 +8,14 @@ public class UserDTO {
     private String userName;
     private String userEmail;
     private Role role;
+    private boolean banned;
 
     public UserDTO(User user) {
         this.userId = user.getUserId();
         this.userName = user.getUserName();
         this.userEmail = user.getUserEmail();
         this.role = user.getRole();
+        this.banned = user.isBanned();
     }
 
     // Getters
@@ -21,4 +23,5 @@ public class UserDTO {
     public String getUserName() { return userName; }
     public String getUserEmail() { return userEmail; }
     public Role getRole() { return role; }
+    public boolean isBanned() { return banned; }
 }
