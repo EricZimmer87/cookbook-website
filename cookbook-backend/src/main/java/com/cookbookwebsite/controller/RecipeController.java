@@ -1,10 +1,15 @@
 package com.cookbookwebsite.controller;
 
+import com.cookbookwebsite.dto.recipe.RecipeCreateRequest;
 import com.cookbookwebsite.dto.recipe.RecipeDTO;
+import com.cookbookwebsite.dto.recipe.RecipeUpdateRequest;
 import com.cookbookwebsite.model.Recipe;
 import com.cookbookwebsite.service.RecipeService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -33,8 +38,29 @@ public class RecipeController {
     }
 
     // Create recipe
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @PostMapping
-    public Recipe createRecipe(@RequestBody Recipe recipe) {
-        return recipeService.createRecipe(recipe);
+    public ResponseEntity<RecipeDTO> createRecipe(@RequestBody RecipeCreateRequest req) {
+        var saved = recipeService.createRecipeForCurrentUser(req);
+        var location = URI.create("/api/recipes/" + saved.getRecipeId());
+        return ResponseEntity.created(location).body(new RecipeDTO(saved));
+    }
+
+    // Update recipe
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
+    @PutMapping("/{id}")
+    public RecipeDTO updateRecipe(
+            @PathVariable Integer id,
+            @RequestBody RecipeUpdateRequest req
+    ) {
+        return recipeService.updateRecipeForCurrentUser(id, req);
+    }
+
+    // Delete recipe
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Integer id) {
+        recipeService.deleteRecipeForCurrentUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

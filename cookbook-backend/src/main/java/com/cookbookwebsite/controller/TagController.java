@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
-@PreAuthorize("hasRole('ADMIN')")
 public class TagController {
     private final TagService tagService;
 
@@ -19,18 +18,21 @@ public class TagController {
     }
 
     // Get all tags
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @GetMapping
     public List<TagDTO> getAllTagDTOs() {
         return tagService.getAllTagDTOs();
     }
 
     // Get tag by ID
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @GetMapping("/{tagId}")
     public TagDTO getTagById(@PathVariable Integer tagId) {
         return tagService.getTagById(tagId);
     }
 
     // Update tag
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public TagDTO updateTag(@PathVariable Integer id, @RequestBody Tag updatedTag) {
         Tag tag = tagService.getTagEntityById(id);
@@ -44,12 +46,14 @@ public class TagController {
     }
 
     // Create tag
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Tag createTag(@RequestBody Tag tag) {
         return tagService.createTag(tag);
     }
 
     // Delete tag
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{tagId}")
     public void deleteTag(@PathVariable Integer tagId) {
         tagService.deleteTagById(tagId);

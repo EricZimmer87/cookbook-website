@@ -9,6 +9,7 @@ public class RecipeIngredientDTO {
     private String unit;
     private String recipeName;
     private String ingredientName;
+    private Boolean isOptional;
 
     public RecipeIngredientDTO(RecipeIngredient recipeIngredient) {
         this.recipeId = recipeIngredient.getRecipe().getRecipeId();
@@ -17,6 +18,7 @@ public class RecipeIngredientDTO {
         this.unit = recipeIngredient.getUnit();
         this.recipeName = recipeIngredient.getRecipe().getRecipeName();
         this.ingredientName = recipeIngredient.getIngredient().getIngredientName();
+        this.isOptional = recipeIngredient.getIsOptional();
     }
 
     // Getters
@@ -26,4 +28,5 @@ public class RecipeIngredientDTO {
     public String getUnit() { return unit; }
     public String getRecipeName() { return recipeName; }
     public String getIngredientName() { return ingredientName; }
+    public Boolean getIsOptional() { return isOptional; }
 }

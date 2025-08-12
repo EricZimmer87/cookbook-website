@@ -2,6 +2,7 @@ package com.cookbookwebsite.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,21 +19,21 @@ public class Recipe {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "difficulty_id")
+    @JoinColumn(name = "difficulty_id", nullable = false)
     private DifficultyLevel difficultyLevel;
 
     @OneToMany(mappedBy = "recipe")
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipe")
-    private List<RecipeIngredient> recipeIngredients;
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipe")
-    private List<RecipeTag> recipeTags;
+    private List<RecipeTag> recipeTags = new ArrayList<>();
 
     @Column(name = "recipe_name", nullable = false)
     private String recipeName;

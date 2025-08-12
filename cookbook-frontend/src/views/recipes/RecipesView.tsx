@@ -1,11 +1,13 @@
 import { useFetch } from '../../api/useFetch.ts';
 import RecipeCard from '../../components/recipe-card';
 import type { RecipeDTO } from '../../types/recipe.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../../components/buttons/Button.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 import AddButton from '../../components/buttons/AddButton.tsx';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/useAuth.ts';
+import { apiFetch } from '../../api/apiFetch.ts';
 
 // Normalize for de-duplication but preserve original casing
 function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): string[] {
@@ -28,7 +30,36 @@ function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): str
 function RecipesView() {
   const { data: recipes, loading: recipesLoading, error } = useFetch<RecipeDTO[]>('/api/recipes');
   useErrorRedirect(error);
+  const { user: authUser } = useAuth();
   const navigate = useNavigate();
+
+  const [list, setList] = useState<RecipeDTO[]>([]);
+  useEffect(() => {
+    if (recipes) setList(recipes);
+  }, [recipes]);
+
+  // helper: can current user delete this recipe?
+  const canDelete = (r: RecipeDTO): boolean => {
+    const role = authUser?.role?.roleName?.toLowerCase();
+    const isAdmin = role === 'admin';
+    const isOwner = !!authUser && r.ownerId === authUser.userId;
+    return !!authUser && (isAdmin || isOwner);
+  };
+
+  const handleDelete = async (recipeId: number) => {
+    if (!window.confirm('Delete this recipe? This cannot be undone.')) return;
+    // optimistic remove
+    const prev = list;
+    setList(prev.filter((r) => r.recipeId !== recipeId));
+    try {
+      await apiFetch<void>(`/api/recipes/${recipeId}`, 'DELETE');
+      // success: nothing else to do
+    } catch (e: any) {
+      // revert on failure
+      setList(prev);
+      alert(e.body || 'Failed to delete recipe');
+    }
+  };
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<'name-asc' | 'name-desc'>('name-asc');
@@ -46,7 +77,7 @@ function RecipesView() {
   );
 
   const allIngredients = getUniqueValuesPreserveCase(
-    (recipes ?? []).flatMap((recipe) => recipe.recipeIngredients.map((ing) => ing.ingredientName)),
+    (recipes ?? []).flatMap((recipe) => recipe.recipeIngredients?.map((ing) => ing.ingredientName)),
   );
 
   const allCategories = getUniqueValuesPreserveCase(
@@ -58,7 +89,7 @@ function RecipesView() {
   );
 
   // Apply filters
-  let displayedRecipes = recipes ?? [];
+  let displayedRecipes = [...list];
 
   if (searchTerm.trim() !== '') {
     displayedRecipes = displayedRecipes.filter((recipe) =>
@@ -74,7 +105,7 @@ function RecipesView() {
 
   if (selectedIngredient !== 'all') {
     displayedRecipes = displayedRecipes.filter((recipe) =>
-      recipe.recipeIngredients.some((ing) => ing.ingredientName === selectedIngredient),
+      recipe.recipeIngredients?.some((ing) => ing.ingredientName === selectedIngredient),
     );
   }
 
@@ -170,7 +201,15 @@ function RecipesView() {
 
       {displayedRecipes.length > 0 ? (
         displayedRecipes.map((recipe) => (
-          <RecipeCard key={recipe.recipeId} recipe={recipe} clickable={true} showReviews={false} />
+          <div key={recipe.recipeId} style={{ marginBottom: 16 }}>
+            <RecipeCard
+              recipe={recipe}
+              clickable={true}
+              showReviews={false}
+              canDelete={canDelete(recipe)}
+              onDelete={handleDelete}
+            />
+          </div>
         ))
       ) : (
         <p>No recipes match your filters.</p>

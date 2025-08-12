@@ -1,54 +1,286 @@
 package com.cookbookwebsite.service;
 
-import com.cookbookwebsite.model.Recipe;
+import com.cookbookwebsite.dto.recipe.IngredientRow;
+import com.cookbookwebsite.dto.recipe.RecipeCreateRequest;
 import com.cookbookwebsite.dto.recipe.RecipeDTO;
-import com.cookbookwebsite.repository.RecipeRepository;
+import com.cookbookwebsite.dto.recipe.RecipeUpdateRequest;
+import com.cookbookwebsite.model.*;
+import com.cookbookwebsite.repository.*;
+import com.cookbookwebsite.security.CustomUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
-    private final RecipeRepository recipeRepository;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final DifficultyLevelRepository difficultyLevelRepository;
+    private final IngredientRepository ingredientRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
+    private final TagRepository tagRepository;
+    private final RecipeTagRepository recipeTagRepository;
+    private final ReviewRepository reviewRepository;
+    private final UserNoteRepository userNoteRepository;
+    private final UserFavoriteRepository userFavoriteRepository;
+
+    public RecipeServiceImpl(RecipeRepository recipeRepository,
+                             UserRepository userRepository,
+                             CategoryRepository categoryRepository,
+                             DifficultyLevelRepository difficultyLevelRepository,
+                             IngredientRepository ingredientRepository,
+                             RecipeIngredientRepository recipeIngredientRepository, // ← comma, not semicolon
+                             TagRepository tagRepository,
+                             RecipeTagRepository recipeTagRepository,
+                             ReviewRepository reviewRepository,
+                             UserNoteRepository userNoteRepository,
+                             UserFavoriteRepository userFavoriteRepository) {
         this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.difficultyLevelRepository = difficultyLevelRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
+        this.tagRepository = tagRepository;
+        this.recipeTagRepository = recipeTagRepository;
+        this.reviewRepository = reviewRepository;
+        this.userNoteRepository = userNoteRepository;
+        this.userFavoriteRepository = userFavoriteRepository;
     }
 
-    // Get all recipes
     @Override
     @Transactional(readOnly = true)
     public List<RecipeDTO> getAllRecipeDTOs() {
-        return recipeRepository.findAll()
-                .stream()
-                .map(RecipeDTO::new)
-                .toList();
+        return recipeRepository.findAll().stream().map(RecipeDTO::new).toList();
     }
 
-    // Get recipe by ID
     @Override
     @Transactional(readOnly = true)
     public RecipeDTO getRecipeById(Integer id) {
-        Recipe recipe = recipeRepository.findById(id)
+        var recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Recipe not found with ID: " + id));
         return new RecipeDTO(recipe);
     }
 
-    // Get recipes by user ID
     @Override
     @Transactional(readOnly = true)
     public List<RecipeDTO> getRecipesByUserId(Integer userId) {
-        return recipeRepository.findByUserUserId(userId)
-                .stream()
-                .map(RecipeDTO::new)
-                .toList();
+        return recipeRepository.findByUserUserId(userId).stream().map(RecipeDTO::new).toList();
     }
 
-    // Create recipe
     @Override
     @Transactional
-    public Recipe createRecipe(Recipe recipe) {
-        return recipeRepository.save(recipe);
+    public Recipe createRecipeForCurrentUser(RecipeCreateRequest req) {
+        // Basic validation
+        if (req.recipeName() == null || req.recipeName().isBlank())
+            throw new IllegalStateException("Recipe name is required");
+        if (req.recipeInstructions() == null || req.recipeInstructions().isBlank())
+            throw new IllegalStateException("Instructions are required");
+
+        // Current user
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails me)) {
+            throw new RuntimeException("Not authenticated");
+        }
+        var user = userRepository.findById(me.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Base recipe
+        var recipe = new Recipe();
+        recipe.setUser(user);
+        recipe.setRecipeName(req.recipeName().trim());
+        recipe.setRecipeInstructions(req.recipeInstructions());
+
+        if (req.categoryId() == null)  throw new IllegalStateException("Category is required");
+        if (req.difficultyId() == null) throw new IllegalStateException("Difficulty is required");
+
+        var cat = categoryRepository.findById(req.categoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found: " + req.categoryId()));
+        recipe.setCategory(cat);
+
+        var diff = difficultyLevelRepository.findById(req.difficultyId())
+                .orElseThrow(() -> new RuntimeException("Difficulty not found: " + req.difficultyId()));
+        recipe.setDifficultyLevel(diff);
+
+        // Persist first to get recipeId for composite keys
+        final Recipe savedRecipe = recipeRepository.save(recipe);
+
+        // Ingredients
+        if (req.ingredients() != null && !req.ingredients().isEmpty()) {
+            var seen = new java.util.HashSet<Integer>();
+            var rows = req.ingredients().stream()
+                    .filter(r -> r != null && r.ingredientId() != null && seen.add(r.ingredientId()))
+                    .toList();
+
+            var ingredientIds = rows.stream().map(IngredientRow::ingredientId).toList();
+            var ingredients = ingredientRepository.findAllById(ingredientIds);
+
+            if (ingredients.size() != ingredientIds.size()) {
+                var foundIds = ingredients.stream().map(Ingredient::getIngredientId)
+                        .collect(java.util.stream.Collectors.toSet());
+                var missing = ingredientIds.stream().filter(id -> !foundIds.contains(id)).toList();
+                throw new RuntimeException("Ingredient(s) not found: " + missing);
+            }
+
+            var ingMap = ingredients.stream()
+                    .collect(java.util.stream.Collectors.toMap(Ingredient::getIngredientId, i -> i));
+
+            var toSave = rows.stream().map(r -> new RecipeIngredient(
+                    savedRecipe,
+                    ingMap.get(r.ingredientId()),
+                    r.quantity(),                                 // may be null
+                    (r.unit() == null ? null : r.unit().trim()),
+                    r.isOptional() != null ? r.isOptional() : Boolean.FALSE
+            )).toList();
+
+            recipeIngredientRepository.saveAll(toSave);
+        }
+
+        // Tags (optional)
+        if (req.tagIds() != null && !req.tagIds().isEmpty()) {
+            var tagIds = req.tagIds().stream().distinct().toList();
+            var tags = tagRepository.findAllById(tagIds);
+
+            if (tags.size() != tagIds.size()) {
+                var found = tags.stream().map(Tag::getTagId)
+                        .collect(java.util.stream.Collectors.toSet());
+                var missing = tagIds.stream().filter(id -> !found.contains(id)).toList();
+                throw new RuntimeException("Tag(s) not found: " + missing);
+            }
+
+            var tagLinks = tags.stream()
+                    .map(tag -> new RecipeTag(savedRecipe, tag))
+                    .toList();
+
+            recipeTagRepository.saveAll(tagLinks);
+        }
+
+        return savedRecipe;
+    }
+
+    // service/RecipeServiceImpl.java
+    @Override
+    @Transactional
+    public RecipeDTO updateRecipeForCurrentUser(Integer recipeId, RecipeUpdateRequest req) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var me = (CustomUserDetails) auth.getPrincipal();
+        var recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found: " + recipeId));
+
+        // Authorization: owner or admin
+        boolean isOwner = recipe.getUser().getUserId().equals(me.getUserId());
+        boolean isAdmin = me.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isOwner && !isAdmin) {
+            throw new org.springframework.security.access.AccessDeniedException("Forbidden");
+        }
+
+        // Validate required fields (since DB schema requires them)
+        if (req.recipeName() == null || req.recipeName().isBlank())
+            throw new IllegalStateException("Recipe name is required");
+        if (req.recipeInstructions() == null || req.recipeInstructions().isBlank())
+            throw new IllegalStateException("Instructions are required");
+        if (req.categoryId() == null) throw new IllegalStateException("Category is required");
+        if (req.difficultyId() == null) throw new IllegalStateException("Difficulty is required");
+
+        // Update base fields
+        recipe.setRecipeName(req.recipeName().trim());
+        recipe.setRecipeInstructions(req.recipeInstructions());
+
+        var category = categoryRepository.findById(req.categoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found: " + req.categoryId()));
+        recipe.setCategory(category);
+
+        var diff = difficultyLevelRepository.findById(req.difficultyId())
+                .orElseThrow(() -> new RuntimeException("Difficulty not found: " + req.difficultyId()));
+        recipe.setDifficultyLevel(diff);
+
+        recipe = recipeRepository.save(recipe);
+
+        // Replace ingredients
+        recipeIngredientRepository.deleteByRecipe_RecipeId(recipeId);
+        if (req.ingredients() != null && !req.ingredients().isEmpty()) {
+            var seen = new java.util.HashSet<Integer>();
+            var rows = req.ingredients().stream()
+                    .filter(r -> r != null && r.ingredientId() != null && seen.add(r.ingredientId()))
+                    .toList();
+
+            var ingIds = rows.stream().map(IngredientRow::ingredientId).toList();
+            var ings = ingredientRepository.findAllById(ingIds);
+            if (ings.size() != ingIds.size()) {
+                var found = ings.stream().map(Ingredient::getIngredientId).collect(java.util.stream.Collectors.toSet());
+                var missing = ingIds.stream().filter(id -> !found.contains(id)).toList();
+                throw new RuntimeException("Ingredient(s) not found: " + missing);
+            }
+            var ingMap = ings.stream().collect(java.util.stream.Collectors.toMap(Ingredient::getIngredientId, i -> i));
+
+            var riList = new java.util.ArrayList<RecipeIngredient>();
+            for (var r : rows) {
+                var ing = ingMap.get(r.ingredientId());
+                var ri = new RecipeIngredient(
+                        recipe,
+                        ing,
+                        r.quantity(),                                   // Double or null
+                        r.unit() == null ? null : r.unit().trim(),
+                        r.isOptional() != null ? r.isOptional() : Boolean.FALSE
+                );
+                riList.add(ri);
+            }
+            recipeIngredientRepository.saveAll(riList);
+        }
+
+        // Replace tags
+        recipeTagRepository.deleteByRecipe_RecipeId(recipeId);
+        if (req.tagIds() != null && !req.tagIds().isEmpty()) {
+            var tagIds = req.tagIds().stream().distinct().toList();
+            var tags = tagRepository.findAllById(tagIds);
+            if (tags.size() != tagIds.size()) {
+                var found = tags.stream().map(Tag::getTagId).collect(java.util.stream.Collectors.toSet());
+                var missing = tagIds.stream().filter(id -> !found.contains(id)).toList();
+                throw new RuntimeException("Tag(s) not found: " + missing);
+            }
+            Recipe finalRecipe = recipe;
+            var rtList = tags.stream().map(t -> new RecipeTag(finalRecipe, t)).toList();
+            recipeTagRepository.saveAll(rtList);
+        }
+
+        // Return updated view
+        return new RecipeDTO(recipe);
+    }
+
+    @Transactional
+    public void deleteRecipeForCurrentUser(Integer recipeId) {
+        var recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found: " + recipeId));
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails me)) {
+            throw new RuntimeException("Not authenticated");
+        }
+        boolean isOwner = recipe.getUser().getUserId().equals(me.getUserId());
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isOwner && !isAdmin) {
+            // Spring will turn this into 403 automatically
+            throw new org.springframework.security.access.AccessDeniedException("Forbidden");
+        }
+
+        // Delete dependents explicitly
+        recipeIngredientRepository.deleteByRecipe_RecipeId(recipeId);
+        recipeTagRepository.deleteByRecipe_RecipeId(recipeId);
+        reviewRepository.deleteByRecipe_RecipeId(recipeId);
+        userNoteRepository.deleteByRecipe_RecipeId(recipeId);
+        userFavoriteRepository.deleteByRecipe_RecipeId(recipeId);
+
+        recipeRepository.delete(recipe);
     }
 }

@@ -9,11 +9,14 @@ import DeleteButton from '../../components/buttons/DeleteButton.tsx';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';
 import Button from '../../components/buttons/Button.tsx';
 import { useAuth } from '../../context/useAuth.ts';
+import { apiFetch } from '../../api/apiFetch.ts';
+import { useEffect, useState } from 'react';
 
 function UserDetailView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user: authUser } = useAuth();
+  const [recipeList, setRecipeList] = useState<RecipeDTO[]>([]);
 
   const {
     data: user,
@@ -35,6 +38,9 @@ function UserDetailView() {
     error: recipesError,
   } = useFetch<RecipeDTO[]>(`/api/recipes?userId=${id}`);
   useErrorRedirect(recipesError);
+  useEffect(() => {
+    if (recipes) setRecipeList(recipes);
+  }, [recipes]);
 
   const {
     data: favorites,
@@ -50,6 +56,18 @@ function UserDetailView() {
 
   const pageUserId = Number(id);
   const isAdmin = authUser?.role?.roleName?.toLowerCase() === 'admin';
+
+  const handleDelete = async (recipeId: number) => {
+    if (!window.confirm('Delete this recipe? This cannot be undone.')) return;
+    const prev = recipeList;
+    setRecipeList(prev.filter((r) => r.recipeId !== recipeId));
+    try {
+      await apiFetch<void>(`/api/recipes/${recipeId}`, 'DELETE');
+    } catch (e: any) {
+      setRecipeList(prev);
+      alert(e.body || 'Failed to delete recipe');
+    }
+  };
 
   return (
     <div>
@@ -87,18 +105,26 @@ function UserDetailView() {
         <p>No favorites.</p>
       )}
 
-      <h2>Recipes by {user.userName}</h2>
-      {recipes && recipes.length > 0 ? (
-        <ul>
-          {recipes.map((recipe) => (
-            <li key={recipe.recipeId}>
-              <Link to={`/recipes/${recipe.recipeId}`}>{recipe.recipeName}</Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No recipes.</p>
-      )}
+      {!!authUser &&
+        ['admin', 'contributor'].includes(authUser.role?.roleName?.toLowerCase() || '') && (
+          <>
+            <h2>Recipes by {user.userName}</h2>
+
+            {recipeList?.length ? (
+              <ul>
+                {recipeList.map((recipe) => (
+                  <li key={recipe.recipeId}>
+                    <Link to={`/recipes/${recipe.recipeId}`}>{recipe.recipeName}</Link>
+                    <DeleteButton onClick={() => handleDelete(recipe.recipeId)} />
+                    <EditButton onClick={() => navigate(`/recipes/${recipe.recipeId}/edit`)} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No recipes.</p>
+            )}
+          </>
+        )}
 
       <h2>Reviews by {user.userName}</h2>
       {reviews && reviews.length > 0 ? (

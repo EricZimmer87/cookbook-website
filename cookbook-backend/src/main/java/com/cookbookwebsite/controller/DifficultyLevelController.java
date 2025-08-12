@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/difficulty-levels")
-@PreAuthorize("hasRole('ADMIN')") // Only allow admin access
 public class DifficultyLevelController {
     private final DifficultyLevelService difficultyLevelService;
 
@@ -19,18 +18,21 @@ public class DifficultyLevelController {
     }
 
     // Get all difficulty levels
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @GetMapping
     public List<DifficultyLevelDTO> getAllDifficultyLevelDTOs() {
         return difficultyLevelService.getAllDifficultyLevelDTOs();
     }
 
     // Get difficulty level by ID
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @GetMapping("/{difficultyLevelId}")
     public DifficultyLevelDTO getDifficultyLevelById(@PathVariable Integer difficultyLevelId) {
         return difficultyLevelService.getDifficultyLevelById(difficultyLevelId);
     }
 
     // Update difficulty level
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public DifficultyLevelDTO updateDifficultyLevel(@PathVariable Integer id, @RequestBody DifficultyLevel updatedDifficultyLevel) {
         DifficultyLevel difficultyLevel = difficultyLevelService.getDifficultyLevelEntityById(id);
@@ -44,12 +46,14 @@ public class DifficultyLevelController {
     }
 
     // Create new difficulty level
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public DifficultyLevel createDifficultyLevel(@RequestBody DifficultyLevel difficultyLevel) {
         return difficultyLevelService.createDifficultyLevel(difficultyLevel);
     }
 
     // Delete difficulty level
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{difficultyLevelId}")
     public void deleteDifficultyLevel(@PathVariable Integer difficultyLevelId) {
         difficultyLevelService.deleteDifficultyLevelById(difficultyLevelId);

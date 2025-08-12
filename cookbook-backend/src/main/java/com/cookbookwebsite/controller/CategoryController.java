@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@PreAuthorize("hasRole('ADMIN')") // Only allow admin access
+@PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')") // Only allow admin access
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -19,6 +19,7 @@ public class CategoryController {
     }
 
     // Get all categories
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @GetMapping
     public List<CategoryDTO> getAllCategoryDTOs() {
         return categoryService.getAllCategoryDTOs();
@@ -26,10 +27,12 @@ public class CategoryController {
 
     // Get category by ID
     @GetMapping("/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     public CategoryDTO getCategoryById(@PathVariable Integer categoryId) { return categoryService.getCategoryById(categoryId); }
 
     // Update category
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryDTO updateCategory(@PathVariable Integer id, @RequestBody Category updatedCategory) {
         Category category = categoryService.getCategoryEntityById(id);
 
@@ -42,6 +45,7 @@ public class CategoryController {
     }
 
     // Create new category
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public CategoryDTO createCategory(@RequestBody Category category) {
         Category savedCategory = categoryService.createCategory(category);
@@ -52,6 +56,7 @@ public class CategoryController {
     }
 
     // Delete category
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{categoryId}")
     public void deleteCategory(@PathVariable Integer categoryId) { categoryService.deleteCategoryById(categoryId); }
 }

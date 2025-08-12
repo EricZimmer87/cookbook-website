@@ -12,4 +12,5 @@ public interface UserNoteRepository extends JpaRepository<UserNote, UserNoteId> 
     List<UserNote> findByRecipeRecipeId(Integer recipeId);
     Optional<UserNote> findByUser_UserIdAndRecipe_RecipeId(Integer userId, Integer recipeId);
     void deleteByUser_UserIdAndRecipe_RecipeId(Integer userId, Integer recipeId);
+    void deleteByRecipe_RecipeId(Integer recipeId);
 }

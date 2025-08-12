@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, RecipeIngredientId> {
     boolean existsByIngredient_IngredientId(Integer ingredientId);
+    void deleteByRecipe_RecipeId(Integer recipeId);
 }

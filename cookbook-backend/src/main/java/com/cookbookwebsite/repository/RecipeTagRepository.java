@@ -5,4 +5,5 @@ import com.cookbookwebsite.model.RecipeTagId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RecipeTagRepository extends JpaRepository<RecipeTag, RecipeTagId> {
+    void deleteByRecipe_RecipeId(Integer recipeId);
 }

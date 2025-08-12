@@ -1,6 +1,8 @@
 package com.cookbookwebsite.service;
 
+import com.cookbookwebsite.dto.recipe.RecipeCreateRequest;
 import com.cookbookwebsite.dto.recipe.RecipeDTO;
+import com.cookbookwebsite.dto.recipe.RecipeUpdateRequest;
 import com.cookbookwebsite.model.Recipe;
 
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.List;
 public interface RecipeService {
     List<RecipeDTO> getAllRecipeDTOs();
     RecipeDTO getRecipeById(Integer id);
-    Recipe createRecipe(Recipe recipe);
+    public Recipe createRecipeForCurrentUser(RecipeCreateRequest req);
     List<RecipeDTO> getRecipesByUserId(Integer userId);
+    public void deleteRecipeForCurrentUser(Integer recipeId);
+    public RecipeDTO updateRecipeForCurrentUser(Integer recipeId, RecipeUpdateRequest req);
 }
