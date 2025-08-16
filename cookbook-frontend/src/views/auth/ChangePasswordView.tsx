@@ -77,37 +77,48 @@ function ChangePasswordView() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <h2>Change Password</h2>
+      <div className="form-group">
+        <label htmlFor="current-password">Current Password</label>
+        <input
+          id="current-password"
+          type="password"
+          placeholder="Current password"
+          {...register('currentPassword', { required: 'Current password is required' })}
+        />
+        {errors.currentPassword && <p className="error">{errors.currentPassword.message}</p>}
+      </div>
 
-      <input
-        type="password"
-        placeholder="Current password"
-        {...register('currentPassword', { required: 'Current password is required' })}
-      />
-      {errors.currentPassword && <p className="error">{errors.currentPassword.message}</p>}
+      <div className="form-group">
+        <label htmlFor="new-password">New Password</label>
+        <input
+          id="new-password"
+          type="password"
+          placeholder="New password"
+          {...register('newPassword', {
+            required: 'New password is required',
+            minLength: { value: 6, message: 'At least 6 characters' },
+          })}
+        />
+        {errors.newPassword && <p className="error">{errors.newPassword.message}</p>}
+      </div>
 
-      <input
-        type="password"
-        placeholder="New password"
-        {...register('newPassword', {
-          required: 'New password is required',
-          minLength: { value: 6, message: 'At least 6 characters' },
-        })}
-      />
-      {errors.newPassword && <p className="error">{errors.newPassword.message}</p>}
+      <div className="form-group">
+        <label htmlFor="confirm-new-password">Confirm New Password</label>
+        <input
+          id="confirm-password"
+          type="password"
+          placeholder="Confirm new password"
+          {...register('confirmNewPassword', {
+            required: 'Please confirm your new password',
+            validate: (v) => v === newPwd || 'Passwords do not match',
+          })}
+        />
+        {(errors.confirmNewPassword || passwordsMismatch) && (
+          <p className="error">{errors.confirmNewPassword?.message || 'Passwords do not match'}</p>
+        )}
 
-      <input
-        type="password"
-        placeholder="Confirm new password"
-        {...register('confirmNewPassword', {
-          required: 'Please confirm your new password',
-          validate: (v) => v === newPwd || 'Passwords do not match',
-        })}
-      />
-      {(errors.confirmNewPassword || passwordsMismatch) && (
-        <p className="error">{errors.confirmNewPassword?.message || 'Passwords do not match'}</p>
-      )}
-
-      {errors.root && <p className="error">{errors.root.message}</p>}
+        {errors.root && <p className="error">{errors.root.message}</p>}
+      </div>
 
       <button
         type="submit"

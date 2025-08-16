@@ -1,0 +1,120 @@
+/* Use your existing form look */
+.ingredients-form .form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Each field on its own line */
+.ingredients-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.ingredients-form .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.ingredients-form .form-group input,
+.ingredients-form .form-group select,
+.ingredients-form .form-group textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+  background-color: #fefefe;
+}
+
+.quantity-input,
+.unit-input {
+  width: 95% !important;
+}
+
+.ingredients-form .form-group input:focus,
+.ingredients-form .form-group select:focus,
+.ingredients-form .form-group textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Ingredient row card */
+.ingredients-form .ingredient-row {
+  padding: 1rem;
+  border: 1px solid #e6e6e6;
+  background: #fafafa;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+/* Row action (Remove) */
+.ingredients-form .row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Bottom action buttons */
+.ingredients-form .footer-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* New ingredient panel styled like a sub-card */
+.ingredients-form .new-ingredient {
+  border: 1px dashed #d2d2d2;
+  background: #fff;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+/* Keep small buttons from stretching full width */
+.ingredients-form button {
+  width: auto;
+}
+
+/* Override the default block label for checkboxes */
+.ingredients-form .form-group label.checkbox-line {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0;
+  font-weight: normal;
+}
+
+.ingredients-form .form-group label.checkbox-line input[type="checkbox"] {
+  margin: 0;
+}
+
+
+/* Grid container for tags */
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem 1rem;
+  align-items: start;
+}
+
+/* Checkbox + text stay tight and aligned */
+.tags-grid .form-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Normalize checkbox spacing */
+.tags-grid .form-label input[type="checkbox"] {
+  margin: 0;
+}
+

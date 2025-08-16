@@ -1,0 +1,75 @@
+.card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* responsive columns */
+  gap: 2rem; /* row + column gap */
+}
+
+.card-list > li {
+  display: flex; /* so the card inside can stretch equal height */
+}
+
+
+/* The card */
+.card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Title link looks like text; card handles hover */
+.card-title {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: rgba(0, 123, 255, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.12);
+}
+
+/* Meta/actions */
+.card-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card-actions a {
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+}
+
+.card-actions a:hover {
+  background: #f3f8ff;
+  border-color: #cfe3ff;
+}
+
+/* Optional: danger style for Delete */
+.card-actions .danger {
+  border-color: #f3c2c2;
+  background: #fff5f5;
+}
+
+.card-actions .danger:hover {
+  background: #ffe9e9;
+  border-color: #e9a9a9;
+}

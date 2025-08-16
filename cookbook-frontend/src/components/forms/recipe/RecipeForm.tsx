@@ -5,6 +5,8 @@ import type { DifficultyLevelDTO } from '../../../types/difficulty-level.ts';
 import type { IngredientDTO } from '../../../types/ingredient.ts';
 import type { TagDTO } from '../../../types/tag.ts';
 import { apiFetch } from '../../../api/apiFetch.ts';
+import CancelButton from '../../buttons/CancelButton.tsx';
+import './RecipeForm.css';
 
 export type IngredientRowForm = {
   key: string;
@@ -16,10 +18,11 @@ export type IngredientRowForm = {
 
 export type RecipeFormValues = {
   recipeName: string;
-  recipeInstructions: string;
   categoryId: number | '';
   difficultyId: number | '';
   rows: IngredientRowForm[];
+  ingredientsNotes: string;
+  recipeInstructions: string;
   tagIds: number[];
 };
 
@@ -39,6 +42,7 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
 
   // core fields
   const [recipeName, setRecipeName] = useState(initialValues?.recipeName ?? '');
+  const [ingredientsNotes, setIngredientsNotes] = useState(initialValues?.ingredientsNotes ?? '');
   const [recipeInstructions, setRecipeInstructions] = useState(
     initialValues?.recipeInstructions ?? '',
   );
@@ -83,7 +87,6 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
   useEffect(() => {
     if (!initialValues) return;
     setRecipeName(initialValues.recipeName ?? '');
-    setRecipeInstructions(initialValues.recipeInstructions ?? '');
     setCategoryId(initialValues.categoryId ?? '');
     setDifficultyId(initialValues.difficultyId ?? '');
     setRows(
@@ -91,6 +94,8 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
         ? initialValues.rows
         : [{ key: crypto.randomUUID() }],
     );
+    setIngredientsNotes(initialValues.ingredientsNotes ?? '');
+    setRecipeInstructions(initialValues.recipeInstructions ?? '');
     setSelectedTagIds(initialValues.tagIds ?? []);
   }, [initialValues]);
 
@@ -139,6 +144,7 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
 
     const payload: RecipeFormValues = {
       recipeName: recipeName.trim(),
+      ingredientsNotes: ingredientsNotes.trim(),
       recipeInstructions,
       categoryId,
       difficultyId,
@@ -155,152 +161,206 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Title
-        <input value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
-      </label>
+    <form className="form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label className="form-label">
+          Title
+          <input value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
+        </label>
+      </div>
 
-      <label>
-        Instructions
-        <textarea
-          value={recipeInstructions}
-          onChange={(e) => setRecipeInstructions(e.target.value)}
-          required
-        />
-      </label>
-
-      <label>
-        Category
-        <select
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : '')}
-          required
-          disabled={loadingLists}
-        >
-          <option value="">Select a category…</option>
-          {categories.map((c) => (
-            <option key={c.categoryId} value={c.categoryId}>
-              {c.categoryName}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label>
-        Difficulty
-        <select
-          value={difficultyId}
-          onChange={(e) => setDifficultyId(e.target.value ? Number(e.target.value) : '')}
-          required
-          disabled={loadingLists}
-        >
-          <option value="">Select difficulty…</option>
-          {difficulties.map((d) => (
-            <option key={d.difficultyLevelId} value={d.difficultyLevelId}>
-              {d.difficultyLevelName}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <fieldset style={{ marginTop: 16 }}>
-        <legend>Ingredients</legend>
-        {rows.map((row) => (
-          <div
-            key={row.key}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '2fr 1fr 1fr auto auto',
-              gap: 8,
-              marginBottom: 8,
-              alignItems: 'center',
-            }}
+      <div className="form-group">
+        <label className="form-label">
+          Category
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : '')}
+            required
+            disabled={loadingLists}
           >
-            <select
-              value={row.ingredientId ?? ''}
-              onChange={(e) =>
-                updateRow(row.key, {
-                  ingredientId: e.target.value ? Number(e.target.value) : undefined,
-                })
-              }
-            >
-              <option value="">Select ingredient…</option>
-              {ingredients.map((i) => (
-                <option key={i.ingredientId} value={i.ingredientId}>
-                  {i.ingredientName}
-                </option>
-              ))}
-            </select>
+            <option value="">Select a category…</option>
+            {categories.map((c) => (
+              <option key={c.categoryId} value={c.categoryId}>
+                {c.categoryName}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
-            <input
-              placeholder="Qty"
-              value={row.quantity ?? ''}
-              onChange={(e) => updateRow(row.key, { quantity: e.target.value })}
-              inputMode="decimal"
-            />
+      <div className="form-group">
+        <label className="form-label">
+          Difficulty
+          <select
+            value={difficultyId}
+            onChange={(e) => setDifficultyId(e.target.value ? Number(e.target.value) : '')}
+            required
+            disabled={loadingLists}
+          >
+            <option value="">Select difficulty…</option>
+            {difficulties.map((d) => (
+              <option key={d.difficultyLevelId} value={d.difficultyLevelId}>
+                {d.difficultyLevelName}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
-            <input
-              placeholder="Unit (e.g., g, cup)"
-              value={row.unit ?? ''}
-              onChange={(e) => updateRow(row.key, { unit: e.target.value })}
-            />
+      <div className="ingredients-form">
+        <fieldset className="form">
+          <legend>Ingredients</legend>
 
-            <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <input
-                type="checkbox"
-                checked={!!row.isOptional}
-                onChange={(e) => updateRow(row.key, { isOptional: e.target.checked })}
-              />
-              optional
-            </label>
+          {rows.map((row) => (
+            <div className="ingredient-row" key={row.key}>
+              <div className="form-group">
+                <label htmlFor={`ingredient-${row.key}`}>Ingredient</label>
+                <select
+                  id={`ingredient-${row.key}`}
+                  name="ingredientId"
+                  value={row.ingredientId ?? ''}
+                  onChange={(e) =>
+                    updateRow(row.key, {
+                      ingredientId: e.target.value ? Number(e.target.value) : undefined,
+                    })
+                  }
+                >
+                  <option value="">Select ingredient…</option>
+                  {[...ingredients]
+                    .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
+                    .map((i) => (
+                      <option key={i.ingredientId} value={i.ingredientId}>
+                        {i.ingredientName}
+                      </option>
+                    ))}
+                </select>
+              </div>
 
-            <button type="button" onClick={() => removeRow(row.key)} disabled={rows.length === 1}>
-              ✕
+              <div className="form-group">
+                <label htmlFor={`qty-${row.key}`}>Quantity</label>
+                <input
+                  className="quantity-input"
+                  id={`qty-${row.key}`}
+                  name="ingredientQuantity"
+                  placeholder="e.g., 2.5"
+                  value={row.quantity ?? ''}
+                  onChange={(e) => updateRow(row.key, { quantity: e.target.value })}
+                  inputMode="decimal"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor={`unit-${row.key}`}>Unit</label>
+                <input
+                  className="unit-input"
+                  id={`unit-${row.key}`}
+                  name="ingedientUnit"
+                  placeholder="e.g., oz, cup"
+                  value={row.unit ?? ''}
+                  onChange={(e) => updateRow(row.key, { unit: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="checkbox-line">
+                  <input
+                    type="checkbox"
+                    checked={!!row.isOptional}
+                    onChange={(e) => updateRow(row.key, { isOptional: e.target.checked })}
+                  />
+                  Optional
+                </label>
+              </div>
+
+              <div className="row-actions">
+                <button
+                  className="button"
+                  type="button"
+                  onClick={() => removeRow(row.key)}
+                  disabled={rows.length === 1}
+                >
+                  X Remove
+                </button>
+              </div>
+            </div>
+          ))}
+
+          <div className="footer-actions">
+            <button className="button" type="button" onClick={addRow}>
+              + Add ingredient row
+            </button>
+            <button className="button" type="button" onClick={() => setShowAddIngredient(true)}>
+              + New ingredient
             </button>
           </div>
-        ))}
 
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" onClick={addRow}>
-            + Add ingredient row
-          </button>
-          <button type="button" onClick={() => setShowAddIngredient(true)}>
-            + New ingredient
-          </button>
-        </div>
+          {showAddIngredient && (
+            <div className="new-ingredient">
+              <div className="form-group">
+                <label htmlFor="new-ingredient-name">New ingredient name</label>
+                <input
+                  id="new-ingredient-name"
+                  placeholder="e.g., Smoked paprika"
+                  value={newIngredientName}
+                  onChange={(e) => setNewIngredientName(e.target.value)}
+                />
+              </div>
+              <div className="footer-actions">
+                <button
+                  className="button button-green"
+                  type="button"
+                  onClick={createIngredient}
+                  disabled={!newIngredientName.trim()}
+                >
+                  Save
+                </button>
+                <button
+                  className="button button-red"
+                  type="button"
+                  onClick={() => {
+                    setShowAddIngredient(false);
+                    setNewIngredientName('');
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </fieldset>
+      </div>
 
-        {showAddIngredient && (
-          <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
-            <input
-              placeholder="New ingredient name"
-              value={newIngredientName}
-              onChange={(e) => setNewIngredientName(e.target.value)}
-            />
-            <button type="button" onClick={createIngredient} disabled={!newIngredientName.trim()}>
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setShowAddIngredient(false);
-                setNewIngredientName('');
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        )}
-      </fieldset>
+      <div className="form-group">
+        <label className="form-label">
+          Ingredients Notes
+          <textarea
+            name="ingredients-notes"
+            value={ingredientsNotes}
+            onChange={(e) => setIngredientsNotes(e.target.value)}
+            autoComplete="off"
+          ></textarea>
+        </label>
+      </div>
 
-      <fieldset style={{ marginTop: 16 }}>
+      <div className="form-group">
+        <label className="form-label">
+          Instructions
+          <textarea
+            value={recipeInstructions}
+            onChange={(e) => setRecipeInstructions(e.target.value)}
+            required
+          />
+        </label>
+      </div>
+
+      <fieldset>
         <legend>Tags</legend>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="tags-grid">
           {tags.map((t) => (
-            <label key={t.tagId} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <label className="form-label checkbox-line" key={t.tagId}>
               <input
                 type="checkbox"
-                checked={selectedTagIds.includes(t.tagId)} // ← read from state
+                checked={selectedTagIds.includes(t.tagId)}
                 onChange={() =>
                   setSelectedTagIds((prev) =>
                     prev.includes(t.tagId)
@@ -315,9 +375,10 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
         </div>
       </fieldset>
 
-      <button type="submit" disabled={!canSubmit} style={{ marginTop: 16 }}>
+      <button className="button button-green" type="submit" disabled={!canSubmit}>
         {saving ? 'Saving…' : submitLabel}
       </button>
+      <CancelButton />
     </form>
   );
 }

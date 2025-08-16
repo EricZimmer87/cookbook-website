@@ -60,6 +60,13 @@ function RecipeCard({ recipe, clickable = false, canDelete = false, onDelete }: 
         ))}
       </ul>
 
+      {recipe.ingredientsNotes && (
+        <p>
+          <strong>Note: </strong>
+          {recipe.ingredientsNotes}
+        </p>
+      )}
+
       <p>{recipe.recipeInstructions}</p>
 
       {canDelete && onDelete && (

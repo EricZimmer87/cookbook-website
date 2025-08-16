@@ -1,0 +1,21 @@
+.add-button {
+  margin-bottom: 10px !important;
+}
+
+/* Recipe Filters */
+
+.recipe-filters {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.recipe-filters select,
+.recipe-filters input {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 0 1rem 0 1rem;
+}

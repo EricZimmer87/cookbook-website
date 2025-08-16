@@ -11,6 +11,7 @@ import Button from '../../components/buttons/Button.tsx';
 import { useAuth } from '../../context/useAuth.ts';
 import { apiFetch } from '../../api/apiFetch.ts';
 import { useEffect, useState } from 'react';
+import './Users.css';
 
 function UserDetailView() {
   const { id } = useParams<{ id: string }>();
@@ -74,7 +75,7 @@ function UserDetailView() {
       <h1>{user.userName}</h1>
       <p>Username: {user.userName}</p>
       <p>Email: {user.userEmail}</p>
-      <p>Role: {user.role.roleName}</p>
+      {isAdmin && <p>Role: {user.role.roleName}</p>}
       <Link to={`/users/${user.userId}/edit`}>
         <EditButton />
       </Link>
@@ -94,10 +95,14 @@ function UserDetailView() {
 
       <h2>{user.userName}'s Favorite Recipes</h2>
       {favorites && favorites.length > 0 ? (
-        <ul>
+        <ul className="card-list">
           {favorites.map((favorite) => (
             <li key={`${favorite.userId}-${favorite.recipeId}`}>
-              <Link to={`/recipes/${favorite.recipeId}`}>{favorite.recipeName}</Link>
+              <Link className="card-link" to={`/recipes/${favorite.recipeId}`}>
+                <article className="card">
+                  <h3 className="card-title">{favorite.recipeName}</h3>
+                </article>
+              </Link>
             </li>
           ))}
         </ul>
@@ -111,12 +116,20 @@ function UserDetailView() {
             <h2>Recipes by {user.userName}</h2>
 
             {recipeList?.length ? (
-              <ul>
+              <ul className="card-list">
                 {recipeList.map((recipe) => (
                   <li key={recipe.recipeId}>
-                    <Link to={`/recipes/${recipe.recipeId}`}>{recipe.recipeName}</Link>
-                    <DeleteButton onClick={() => handleDelete(recipe.recipeId)} />
-                    <EditButton onClick={() => navigate(`/recipes/${recipe.recipeId}/edit`)} />
+                    <article className="card">
+                      <h3 className="card-title">
+                        <Link to={`/recipes/${recipe.recipeId}`}>{recipe.recipeName}</Link>
+                      </h3>
+
+                      <div className="card-actions">
+                        <Link to={`/recipes/${recipe.recipeId}`}>View</Link>
+                        <EditButton onClick={() => navigate(`/recipes/${recipe.recipeId}/edit`)} />
+                        <DeleteButton onClick={() => handleDelete(recipe.recipeId)} />
+                      </div>
+                    </article>
                   </li>
                 ))}
               </ul>
@@ -128,12 +141,19 @@ function UserDetailView() {
 
       <h2>Reviews by {user.userName}</h2>
       {reviews && reviews.length > 0 ? (
-        <ul>
+        <ul className="card-list">
           {reviews.map((review) => (
             <li key={review.reviewId}>
-              <strong>{review.recipeName}</strong>: {review.reviewText} ({review.score}/5)
-              <EditButton onClick={() => navigate(`/reviews/${review.reviewId}/edit`)} />
-              <DeleteButton onClick={() => navigate(`/reviews/${review.reviewId}/delete`)} />
+              <article className="card">
+                <h3 className="card-title">
+                  {review.recipeName} ({review.score}/5)
+                </h3>
+                <p>{review.reviewText}</p>
+                <div className="card-actions">
+                  <EditButton onClick={() => navigate(`/reviews/${review.reviewId}/edit`)} />
+                  <DeleteButton onClick={() => navigate(`/reviews/${review.reviewId}/delete`)} />
+                </div>
+              </article>
             </li>
           ))}
         </ul>
@@ -143,5 +163,9 @@ function UserDetailView() {
     </div>
   );
 }
+
+// <strong>{review.recipeName}</strong>: {review.reviewText} ({review.score}/5)
+// <EditButton onClick={() => navigate(`/reviews/${review.reviewId}/edit`)} />
+// <DeleteButton onClick={() => navigate(`/reviews/${review.reviewId}/delete`)} />
 
 export default UserDetailView;

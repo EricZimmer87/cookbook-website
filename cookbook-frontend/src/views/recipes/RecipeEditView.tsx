@@ -33,10 +33,11 @@ function RecipeEditView() {
 
     setInitialValues({
       recipeName: recipe.recipeName,
+      rows,
+      ingredientsNotes: recipe.ingredientsNotes,
       recipeInstructions: recipe.recipeInstructions,
       categoryId: recipe.categoryId ?? '',
       difficultyId: recipe.difficultyLevelId ?? '',
-      rows,
       tagIds,
     });
   }, [recipe]);

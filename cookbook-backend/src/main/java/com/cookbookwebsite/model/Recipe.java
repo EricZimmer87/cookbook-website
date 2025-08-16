@@ -41,6 +41,9 @@ public class Recipe {
     @Column(name = "recipe_instructions", columnDefinition = "TEXT", nullable = false)
     private String recipeInstructions;
 
+    @Column(name = "ingredients_notes", columnDefinition = "TEXT", nullable = true)
+    private String ingredientsNotes;
+
     @Column(name = "recipe_image")
     private String recipeImage;
 
@@ -59,6 +62,9 @@ public class Recipe {
     public void setRecipeInstructions(String recipeInstructions) {
         this.recipeInstructions = recipeInstructions;
     }
+
+    public String getIngredientsNotes() { return ingredientsNotes; }
+    public void setIngredientsNotes(String ingredientsNotes) { this.ingredientsNotes = ingredientsNotes; }
 
     public String getRecipeImage() { return recipeImage; }
     public void setRecipeImage(String recipeImage) {

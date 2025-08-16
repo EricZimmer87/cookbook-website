@@ -13,6 +13,7 @@ public class RecipeDTO {
     private Integer ownerId;
     private String recipeName;
     private String recipeInstructions;
+    private String ingredientsNotes;
     private String recipeImage;
     private Integer categoryId;
     private String categoryName;
@@ -27,6 +28,7 @@ public class RecipeDTO {
         this.ownerId = recipe.getUser().getUserId();
         this.recipeName = recipe.getRecipeName();
         this.recipeInstructions = recipe.getRecipeInstructions();
+        this.ingredientsNotes = recipe.getIngredientsNotes();
         this.recipeImage = recipe.getRecipeImage();
         this.categoryId = recipe.getCategory().getCategoryId();
         this.categoryName = recipe.getCategory() != null ? recipe.getCategory().getCategoryName() : null;
@@ -45,6 +47,7 @@ public class RecipeDTO {
     public Integer getRecipeId() { return recipeId; }
     public String getRecipeName() { return recipeName; }
     public String getRecipeInstructions() { return recipeInstructions; }
+    public String getIngredientsNotes() { return ingredientsNotes; }
     public String getRecipeImage() { return recipeImage; }
     public Integer getCategoryId() { return categoryId; }
     public String getCategoryName() { return categoryName; }

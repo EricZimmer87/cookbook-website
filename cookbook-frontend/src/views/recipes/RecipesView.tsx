@@ -8,6 +8,7 @@ import AddButton from '../../components/buttons/AddButton.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth.ts';
 import { apiFetch } from '../../api/apiFetch.ts';
+import './Recipes.css';
 
 // Normalize for de-duplication but preserve original casing
 function getUniqueValuesPreserveCase(values: (string | null | undefined)[]): string[] {
@@ -131,9 +132,14 @@ function RecipesView() {
   return (
     <div>
       <h1>All Recipes</h1>
-      <AddButton onClick={() => navigate('/recipes/new')}>Add Recipe</AddButton>
+      {authUser &&
+        (authUser.role.roleName === 'admin' || authUser.role.roleName === 'contributor') && (
+          <AddButton className="add-button" onClick={() => navigate('/recipes/new')}>
+            Add Recipe
+          </AddButton>
+        )}
 
-      <div style={{ marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="recipe-filters">
         <input
           type="text"
           placeholder="Search recipes..."

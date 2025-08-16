@@ -1,5 +1,9 @@
 /* Buttons */
 .button {
+  display: inline-flex; /* aligns icon + text */
+  align-items: center;
+  gap: 0.4rem; /* space between icon and text */
+
   padding: 8px 16px;
   margin: 2px;
   border: none;
@@ -7,6 +11,7 @@
   font-weight: 600;
   cursor: pointer;
 }
+
 
 .button-blue {
   background: #007bff;

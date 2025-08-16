@@ -4,6 +4,7 @@ import { useAuth } from '../../context/useAuth.ts';
 import EditButton from '../buttons/EditButton.tsx';
 import DeleteButton from '../buttons/DeleteButton.tsx';
 import AddButton from '../buttons/AddButton.tsx';
+import './Reviews.css';
 
 type ReviewsProps = {
   reviews: ReviewDTO[];
@@ -29,6 +30,7 @@ function Reviews({ reviews, recipeId }: ReviewsProps) {
   return (
     <div className="recipe-reviews">
       <h4>Reviews:</h4>
+
       {user && !hasUserReviewed && (
         <AddButton
           onClick={() =>
@@ -40,28 +42,33 @@ function Reviews({ reviews, recipeId }: ReviewsProps) {
       )}
 
       {sortedReviews.length > 0 ? (
-        <ul>
+        <ul className="reviews-list">
           {sortedReviews.map((review) => (
-            <li key={review.reviewId}>
-              <strong>{review.userName}</strong>: {review.reviewText} ({review.score}/5)
-              {user && review.userId === user.userId && (
-                <>
-                  <EditButton
-                    onClick={() =>
-                      navigate(`/reviews/${review.reviewId}/edit`, {
-                        state: { from: location.pathname },
-                      })
-                    }
-                  />
-                  <DeleteButton
-                    onClick={() =>
-                      navigate(`/reviews/${review.reviewId}/delete`, {
-                        state: { from: location.pathname },
-                      })
-                    }
-                  />
-                </>
-              )}
+            <li key={review.reviewId} className="review-card">
+              <article className="card">
+                <h3 className="review-user">{review.userName}</h3>
+                <p className="review-score">Score: {review.score}/5</p>
+                <p className="review-text">{review.reviewText}</p>
+
+                {user && review.userId === user.userId && (
+                  <div className="review-actions">
+                    <EditButton
+                      onClick={() =>
+                        navigate(`/reviews/${review.reviewId}/edit`, {
+                          state: { from: location.pathname },
+                        })
+                      }
+                    />
+                    <DeleteButton
+                      onClick={() =>
+                        navigate(`/reviews/${review.reviewId}/delete`, {
+                          state: { from: location.pathname },
+                        })
+                      }
+                    />
+                  </div>
+                )}
+              </article>
             </li>
           ))}
         </ul>
