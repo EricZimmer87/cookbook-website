@@ -37,7 +37,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
         <Link to="/" className="navbar-logo navbar-menu-link" onClick={closeMobile}>
-          {websiteTitle}
+          <h1>{websiteTitle}</h1>
         </Link>
       </div>
 

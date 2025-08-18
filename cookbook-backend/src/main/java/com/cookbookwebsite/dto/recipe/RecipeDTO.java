@@ -14,7 +14,6 @@ public class RecipeDTO {
     private String recipeName;
     private String recipeInstructions;
     private String ingredientsNotes;
-    private String recipeImage;
     private Integer categoryId;
     private String categoryName;
     private Integer difficultyLevelId;
@@ -29,7 +28,6 @@ public class RecipeDTO {
         this.recipeName = recipe.getRecipeName();
         this.recipeInstructions = recipe.getRecipeInstructions();
         this.ingredientsNotes = recipe.getIngredientsNotes();
-        this.recipeImage = recipe.getRecipeImage();
         this.categoryId = recipe.getCategory().getCategoryId();
         this.categoryName = recipe.getCategory() != null ? recipe.getCategory().getCategoryName() : null;
         this.difficultyLevelId = recipe.getDifficultyLevel().getDifficultyId();
@@ -48,7 +46,6 @@ public class RecipeDTO {
     public String getRecipeName() { return recipeName; }
     public String getRecipeInstructions() { return recipeInstructions; }
     public String getIngredientsNotes() { return ingredientsNotes; }
-    public String getRecipeImage() { return recipeImage; }
     public Integer getCategoryId() { return categoryId; }
     public String getCategoryName() { return categoryName; }
     public Integer getDifficultyLevelId() { return difficultyLevelId; }

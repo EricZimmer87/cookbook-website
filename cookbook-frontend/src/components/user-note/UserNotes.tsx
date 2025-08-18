@@ -2,7 +2,7 @@ import type { UserNotesDTO } from '../../types/user-notes.ts';
 
 type UserNotesProps = {
   userNote: UserNotesDTO | null;
-  titleUserName?: string; // optional override from parent
+  titleUserName?: string;
 };
 
 function UserNotes({ userNote, titleUserName }: UserNotesProps) {

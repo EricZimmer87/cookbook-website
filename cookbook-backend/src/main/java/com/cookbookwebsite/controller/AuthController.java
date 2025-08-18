@@ -90,7 +90,6 @@ public class AuthController {
             @RequestBody ChangePasswordRequest req,
             Principal principal // comes from JWT-authenticated request
     ) {
-        // make sure this endpoint is NOT permitAll in SecurityConfig
         var user = userRepository.findByUserEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -100,8 +99,6 @@ public class AuthController {
 
         user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
         userRepository.save(user);
-
-        // (optional) invalidate existing JWTs / rotate secrets if you maintain sessions elsewhere
 
         return ResponseEntity.ok("Password changed");
     }

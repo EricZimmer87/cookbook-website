@@ -31,7 +31,7 @@ public class WebConfig {
                 "http://localhost:5173", "http://127.0.0.1:5173"
         ));
         cfg.setAllowedMethods(java.util.List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        cfg.addAllowedHeader("*");                 // ⬅️ allow all request headers
+        cfg.addAllowedHeader("*");                 // allow all request headers
         cfg.setAllowCredentials(true);
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);

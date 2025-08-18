@@ -3,6 +3,7 @@ package com.cookbookwebsite.controller;
 import com.cookbookwebsite.dto.recipeingredient.RecipeIngredientDTO;
 import com.cookbookwebsite.model.RecipeIngredient;
 import com.cookbookwebsite.service.RecipeIngredientService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class RecipeIngredientController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     public RecipeIngredient createRecipeIngredient(@RequestBody RecipeIngredient recipeIngredient) {
         return recipeIngredientService.createRecipeIngredient(recipeIngredient);
     }

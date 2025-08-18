@@ -3,7 +3,6 @@ package com.cookbookwebsite.model;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -44,9 +43,6 @@ public class Recipe {
     @Column(name = "ingredients_notes", columnDefinition = "TEXT", nullable = true)
     private String ingredientsNotes;
 
-    @Column(name = "recipe_image")
-    private String recipeImage;
-
     // Getters and Setters
     public Integer getRecipeId() { return recipeId; }
     public void setRecipeId(Integer recipeId) {
@@ -65,11 +61,6 @@ public class Recipe {
 
     public String getIngredientsNotes() { return ingredientsNotes; }
     public void setIngredientsNotes(String ingredientsNotes) { this.ingredientsNotes = ingredientsNotes; }
-
-    public String getRecipeImage() { return recipeImage; }
-    public void setRecipeImage(String recipeImage) {
-        this.recipeImage = recipeImage;
-    }
 
     public User getUser() { return user; }
     public void setUser(User user) {

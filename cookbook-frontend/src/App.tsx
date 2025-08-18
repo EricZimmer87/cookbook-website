@@ -37,13 +37,14 @@ import ChangePasswordView from './views/auth/ChangePasswordView.tsx';
 import UserEditRoleView from './views/users/UserEditRoleView.tsx';
 import RecipeCreateView from './views/recipes/RecipeCreateView.tsx';
 import RecipeEditView from './views/recipes/RecipeEditView.tsx';
+import HomeView from './views/home/HomeView.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />, // Navbar is here
     children: [
-      { index: true, element: <h1>Home Page</h1> },
+      { index: true, element: <HomeView /> },
       { path: '/forgot-password', element: <ForgotPasswordView /> },
       { path: '/reset-password', element: <ResetPasswordView /> },
       { path: '/auth/change-password', element: <ChangePasswordView /> },

@@ -12,7 +12,7 @@ public class Ingredient {
     @Column(name = "ingredient_id")
     private Integer ingredientId;
 
-    @Column(name = "ingredient_name", nullable = false)
+    @Column(name = "ingredient_name", nullable = false, unique = true)
     private String ingredientName;
 
     @OneToMany(mappedBy = "ingredient")

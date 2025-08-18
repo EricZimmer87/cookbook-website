@@ -75,9 +75,13 @@ DROP TABLE IF EXISTS `ingredients`;
 CREATE TABLE `ingredients` (
   `ingredient_id` int NOT NULL AUTO_INCREMENT,
   `ingredient_name` varchar(255) NOT NULL,
-  PRIMARY KEY (`ingredient_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`ingredient_id`),
+  UNIQUE KEY `ux_ingredients_name` (`ingredient_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=34
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Dumping data for table `ingredients`

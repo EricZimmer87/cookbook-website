@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/password-reset/**").permitAll()
                         .requestMatchers("/api/test-mail/**").permitAll()
 
-                        // Everything else default (adjust as needed)
+                        // Everything else default
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

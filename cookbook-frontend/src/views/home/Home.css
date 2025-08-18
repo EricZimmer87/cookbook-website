@@ -1,0 +1,9 @@
+.welcome-header,
+.welcome-body {
+  margin: auto;
+  text-align: center;
+}
+
+.welcome-header {
+  margin-bottom: 50px;
+}

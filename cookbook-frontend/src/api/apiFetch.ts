@@ -42,9 +42,5 @@ export async function apiFetch<T>(
   // Error path: read body text for message
   const errorText = await resp.text();
 
-  // Optional: centralize auth redirects in one place (if you want)
-  // But for this screen we want to surface 409, so don't auto-redirect 403 here.
-  // if (resp.status === 401) window.location.href = '/login';
-
   throw new ApiError(resp.status, errorText || `HTTP ${resp.status}`);
 }

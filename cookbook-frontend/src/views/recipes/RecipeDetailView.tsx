@@ -132,7 +132,7 @@ function RecipeDetailView() {
   const canEditViewedNote =
     // owner can edit own note via self endpoint
     viewingSelf ||
-    // admin can edit others via admin endpoint (you already have this backend)
+    // admin can edit others via admin endpoint
     (authUser?.role?.roleName?.toLowerCase() === 'admin' && selectedUserId != null);
 
   return (

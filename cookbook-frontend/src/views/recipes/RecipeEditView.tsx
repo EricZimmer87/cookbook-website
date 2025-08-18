@@ -20,10 +20,10 @@ function RecipeEditView() {
   useEffect(() => {
     if (!recipe) return;
 
-    // Map existing DTO → form values
+    // Map existing DTO -> form values
     const rows: IngredientRowForm[] = recipe.recipeIngredients?.map((ri) => ({
       key: crypto.randomUUID(),
-      ingredientId: ri.ingredientId, // ensure your RecipeIngredientDTO includes this
+      ingredientId: ri.ingredientId,
       quantity: ri.quantity != null ? String(ri.quantity) : '',
       unit: ri.unit ?? '',
       isOptional: ri.isOptional,

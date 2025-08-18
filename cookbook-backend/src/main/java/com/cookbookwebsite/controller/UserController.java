@@ -81,7 +81,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN','CONTRIBUTOR')")
     @GetMapping("/by-roles")
     public List<UserDTO> getUsersByRoles(@RequestParam List<String> roles) {
-        // Normalize role names to match how they’re stored (e.g. ADMIN / CONTRIBUTOR)
+        // Normalize role names to match how they’re stored
         var normalized = roles.stream()
                 .map(r -> r.trim().toUpperCase(Locale.ROOT))
                 .collect(Collectors.toList());

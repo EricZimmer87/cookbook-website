@@ -1,4 +1,3 @@
-// components/user-note/AddUserNote.tsx
 import { useState } from 'react';
 import { apiFetch } from '../../api/apiFetch';
 import AddButton from '../buttons/AddButton';
@@ -7,7 +6,7 @@ type AddUserNoteProps = {
   recipeId: number;
   existingText?: string;
   onSaved?: (newText: string) => void;
-  userIdOverride?: number; // if admin editing someone else
+  userIdOverride?: number;
 };
 
 export default function AddUserNote({

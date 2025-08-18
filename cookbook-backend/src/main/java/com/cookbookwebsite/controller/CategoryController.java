@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')") // Only allow admin access
+@PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
 public class CategoryController {
     private final CategoryService categoryService;
 

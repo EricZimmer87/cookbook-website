@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/recipe-tags")
-@PreAuthorize("hasRole('ADMIN')")
 public class RecipeTagController {
     private final RecipeTagService recipeTagService;
 
@@ -19,11 +18,13 @@ public class RecipeTagController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     public List<RecipeTagDTO> getAllRecipeTagDTOs() {
         return recipeTagService.getAllRecipeTagDTOs();
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public RecipeTag createRecipeTag(@RequestBody RecipeTag recipeTag) {
         return recipeTagService.createRecipeTag(recipeTag);
     }

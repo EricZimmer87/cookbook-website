@@ -54,7 +54,7 @@ function RecipesView() {
     setList(prev.filter((r) => r.recipeId !== recipeId));
     try {
       await apiFetch<void>(`/api/recipes/${recipeId}`, 'DELETE');
-      // success: nothing else to do
+      // success
     } catch (e: any) {
       // revert on failure
       setList(prev);

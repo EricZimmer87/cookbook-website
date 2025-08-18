@@ -164,8 +164,4 @@ function UserDetailView() {
   );
 }
 
-// <strong>{review.recipeName}</strong>: {review.reviewText} ({review.score}/5)
-// <EditButton onClick={() => navigate(`/reviews/${review.reviewId}/edit`)} />
-// <DeleteButton onClick={() => navigate(`/reviews/${review.reviewId}/delete`)} />
-
 export default UserDetailView;

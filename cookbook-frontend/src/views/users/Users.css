@@ -3,13 +3,17 @@
   margin: 0;
   padding: 0;
 
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* responsive columns */
-  gap: 2rem; /* row + column gap */
+  display: flex;
+  flex-direction: column;
+
+  /*display: grid;*/
+  /*grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));*/
+  /*gap: 2rem;*/
 }
 
 .card-list > li {
-  display: flex; /* so the card inside can stretch equal height */
+  display: flex;
+  padding: 5px;
 }
 
 
@@ -26,7 +30,6 @@
   gap: 0.5rem;
 }
 
-/* Title link looks like text; card handles hover */
 .card-title {
   margin: 0 0 0.25rem;
   font-weight: 600;
@@ -63,7 +66,6 @@
   border-color: #cfe3ff;
 }
 
-/* Optional: danger style for Delete */
 .card-actions .danger {
   border-color: #f3c2c2;
   background: #fff5f5;

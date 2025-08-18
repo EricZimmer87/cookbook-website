@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFetch } from '../../api/useFetch';
-import { apiFetch } from '../../api/apiFetch'; // POST/PUT helper
+import { apiFetch } from '../../api/apiFetch';
 import type { RoleDTO, UserDTO } from '../../types/user';
 import UserForm from '../../components/forms/user/UserForm';
 import { useErrorRedirect } from '../../hooks/useErrorRedirect.ts';

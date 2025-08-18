@@ -35,7 +35,7 @@ public class AuthService {
         return currentUserEmail != null && currentUserEmail.equals(targetEmail);
     }
 
-    // Check if current user has admin role (optional if you use roles)
+    // Check if current user has admin role
     public boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null &&

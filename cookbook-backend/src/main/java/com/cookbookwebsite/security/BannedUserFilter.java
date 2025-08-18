@@ -24,7 +24,6 @@ public class BannedUserFilter extends OncePerRequestFilter {
 
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
-            // If your principal is a CustomUserDetails with userId, use that directly:
             Object principal = auth.getPrincipal();
             Integer userId = null;
             String email = null;

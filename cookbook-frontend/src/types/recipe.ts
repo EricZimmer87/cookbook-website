@@ -21,7 +21,6 @@ export interface RecipeDTO {
   recipeName: string;
   recipeInstructions: string;
   ingredientsNotes: string;
-  recipeImage?: string | null;
   categoryId: number;
   categoryName?: string;
   difficultyLevelId?: number;
