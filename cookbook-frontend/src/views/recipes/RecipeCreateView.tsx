@@ -20,6 +20,7 @@ function RecipeCreateView() {
     const dto = await apiFetch<RecipeDTO>('/api/recipes', 'POST', {
       recipeName: v.recipeName,
       recipeInstructions: v.recipeInstructions,
+      ingredientsNotes: v.ingredientsNotes,
       categoryId: Number(v.categoryId),
       difficultyId: Number(v.difficultyId),
       ingredients: ingredientsPayload,

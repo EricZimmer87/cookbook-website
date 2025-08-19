@@ -59,6 +59,7 @@ function RecipeEditView() {
     await apiFetch<void>(`/api/recipes/${id}`, 'PUT', {
       recipeName: v.recipeName,
       recipeInstructions: v.recipeInstructions,
+      ingredientsNotes: v.ingredientsNotes,
       categoryId: Number(v.categoryId),
       difficultyId: Number(v.difficultyId),
       ingredients: ingredientsPayload,
