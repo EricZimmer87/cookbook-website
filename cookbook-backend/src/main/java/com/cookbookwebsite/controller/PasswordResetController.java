@@ -34,7 +34,7 @@ public class PasswordResetController {
 
         PasswordResetToken token = tokenService.createToken(userOpt.get());
 
-        String link = "localhost:5173/reset-password?token=" + token.getToken();
+        String link = "https://cookbook-website.onrender.com/reset-password?token=" + token.getToken();
         emailService.sendEmail(
                 userOpt.get().getUserEmail(),
                 "Password Reset Request",
