@@ -8,8 +8,9 @@ import java.util.List;
 public record RecipeCreateRequest(
         @NotBlank String recipeName,
         @NotBlank String recipeInstructions,
-        @NotNull  Integer categoryId,         // required
-        @NotNull  Integer difficultyId,       // required
+        @NotNull  Integer categoryId,
+        @NotNull  Integer difficultyId,
+        String ingredientsNotes,
         List<IngredientRow> ingredients,
         List<Integer> tagIds
 ) {}

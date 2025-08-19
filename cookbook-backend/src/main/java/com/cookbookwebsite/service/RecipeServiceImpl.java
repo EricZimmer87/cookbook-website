@@ -94,6 +94,7 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setUser(user);
         recipe.setRecipeName(req.recipeName().trim());
         recipe.setRecipeInstructions(req.recipeInstructions());
+        recipe.setIngredientsNotes(req.ingredientsNotes() == null ? null : req.ingredientsNotes().trim());
 
         if (req.categoryId() == null) throw new IllegalStateException("Category is required");
         if (req.difficultyId() == null) throw new IllegalStateException("Difficulty is required");
@@ -189,6 +190,7 @@ public class RecipeServiceImpl implements RecipeService {
         // Update base fields
         recipe.setRecipeName(req.recipeName().trim());
         recipe.setRecipeInstructions(req.recipeInstructions());
+        recipe.setIngredientsNotes(req.ingredientsNotes() == null ? null : req.ingredientsNotes().trim());
 
         var category = categoryRepository.findById(req.categoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found: " + req.categoryId()));

@@ -7,6 +7,7 @@ public record RecipeUpdateRequest(
         String recipeInstructions,
         Integer categoryId,
         Integer difficultyId,
+        String ingredientsNotes,
         List<IngredientRow> ingredients,   // may be null/empty
         List<Integer> tagIds               // may be null/empty
 ) {}
