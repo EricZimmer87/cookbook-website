@@ -27,47 +27,49 @@ function CategoriesView() {
       <AddButton
         onClick={() => navigate('/categories/new', { state: { from: location.pathname } })}
       />
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Recipe Count</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[...categories]
-            .sort((a, b) => {
-              const nameA = a.categoryName || '';
-              const nameB = b.categoryName || '';
-              return nameA.localeCompare(nameB);
-            })
-            .map((category) => (
-              <tr key={category.categoryId}>
-                <td>{category.categoryId}</td>
-                <td>{category.categoryName}</td>
-                <td>{category.recipeCount}</td>
-                <td>
-                  <EditButton
-                    onClick={() =>
-                      navigate(`/categories/${category.categoryId}/edit`, {
-                        state: { from: location.pathname },
-                      })
-                    }
-                  />
-                  <DeleteButton
-                    onClick={() =>
-                      navigate(`/categories/${category.categoryId}/delete`, {
-                        state: { from: location.pathname },
-                      })
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Recipe Count</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...categories]
+              .sort((a, b) => {
+                const nameA = a.categoryName || '';
+                const nameB = b.categoryName || '';
+                return nameA.localeCompare(nameB);
+              })
+              .map((category) => (
+                <tr key={category.categoryId}>
+                  <td>{category.categoryId}</td>
+                  <td>{category.categoryName}</td>
+                  <td>{category.recipeCount}</td>
+                  <td>
+                    <EditButton
+                      onClick={() =>
+                        navigate(`/categories/${category.categoryId}/edit`, {
+                          state: { from: location.pathname },
+                        })
+                      }
+                    />
+                    <DeleteButton
+                      onClick={() =>
+                        navigate(`/categories/${category.categoryId}/delete`, {
+                          state: { from: location.pathname },
+                        })
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -27,39 +27,41 @@ function DifficultyLevelsView() {
       <AddButton
         onClick={() => navigate('/difficulty-levels/new', { state: { from: location.pathname } })}
       />
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[...difficultyLevels].map((difficultyLevel) => (
-            <tr key={difficultyLevel.difficultyLevelId}>
-              <td>{difficultyLevel.difficultyLevelId}</td>
-              <td>{difficultyLevel.difficultyLevelName}</td>
-              <td>
-                <EditButton
-                  onClick={() =>
-                    navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/edit`, {
-                      state: { from: location.pathname },
-                    })
-                  }
-                />
-                <DeleteButton
-                  onClick={() =>
-                    navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/delete`, {
-                      state: { from: location.pathname },
-                    })
-                  }
-                />
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {[...difficultyLevels].map((difficultyLevel) => (
+              <tr key={difficultyLevel.difficultyLevelId}>
+                <td>{difficultyLevel.difficultyLevelId}</td>
+                <td>{difficultyLevel.difficultyLevelName}</td>
+                <td>
+                  <EditButton
+                    onClick={() =>
+                      navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/edit`, {
+                        state: { from: location.pathname },
+                      })
+                    }
+                  />
+                  <DeleteButton
+                    onClick={() =>
+                      navigate(`/difficulty-levels/${difficultyLevel.difficultyLevelId}/delete`, {
+                        state: { from: location.pathname },
+                      })
+                    }
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -39,51 +39,55 @@ function UsersView() {
   return (
     <div>
       <h1>All Users</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Is Banned?</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((user) => (
-            <tr key={user.userId}>
-              <td>{user.userId}</td>
-              <td>
-                <Link to={`/users/${user.userId}`}>{user.userName}</Link>
-              </td>
-              <td>{user.userEmail}</td>
-              <td>{user.role.roleName}</td>
-              <td>{user.banned ? 'Yes' : 'No'}</td>
-              <td style={{ display: 'flex', gap: 8 }}>
-                <button
-                  className="button button-gray"
-                  onClick={() => toggleBan(user)}
-                  title={user.banned ? 'Unban user' : 'Ban user'}
-                >
-                  {user.banned ? 'Unban' : 'Ban'}
-                </button>
-
-                <EditButton
-                  onClick={() =>
-                    navigate(`/users/${user.userId}/edit`, { state: { from: location.pathname } })
-                  }
-                />
-                <DeleteButton
-                  onClick={() =>
-                    navigate(`/users/${user.userId}/delete`, { state: { from: location.pathname } })
-                  }
-                />
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Is Banned?</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((user) => (
+              <tr key={user.userId}>
+                <td>{user.userId}</td>
+                <td>
+                  <Link to={`/users/${user.userId}`}>{user.userName}</Link>
+                </td>
+                <td>{user.userEmail}</td>
+                <td>{user.role.roleName}</td>
+                <td>{user.banned ? 'Yes' : 'No'}</td>
+                <td style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="button button-gray"
+                    onClick={() => toggleBan(user)}
+                    title={user.banned ? 'Unban user' : 'Ban user'}
+                  >
+                    {user.banned ? 'Unban' : 'Ban'}
+                  </button>
+
+                  <EditButton
+                    onClick={() =>
+                      navigate(`/users/${user.userId}/edit`, { state: { from: location.pathname } })
+                    }
+                  />
+                  <DeleteButton
+                    onClick={() =>
+                      navigate(`/users/${user.userId}/delete`, {
+                        state: { from: location.pathname },
+                      })
+                    }
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

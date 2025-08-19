@@ -94,6 +94,22 @@
 /* Tables */
 
 /* Table Styles */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  min-width: 600px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

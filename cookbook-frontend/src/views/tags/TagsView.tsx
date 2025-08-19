@@ -21,37 +21,41 @@ function TagsView() {
     <div>
       <h1>All Tags</h1>
       <AddButton onClick={() => navigate('/tags/new', { state: { from: location.pathname } })} />
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[...tags]
-            .sort((a, b) => a.tagName.localeCompare(b.tagName))
-            .map((tag) => (
-              <tr key={tag.tagId}>
-                <td>{tag.tagId}</td>
-                <td>{tag.tagName}</td>
-                <td>
-                  <EditButton
-                    onClick={() =>
-                      navigate(`/tags/${tag.tagId}/edit`, { state: { from: location.pathname } })
-                    }
-                  />
-                  <DeleteButton
-                    onClick={() =>
-                      navigate(`/tags/${tag.tagId}/delete`, { state: { from: location.pathname } })
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...tags]
+              .sort((a, b) => a.tagName.localeCompare(b.tagName))
+              .map((tag) => (
+                <tr key={tag.tagId}>
+                  <td>{tag.tagId}</td>
+                  <td>{tag.tagName}</td>
+                  <td>
+                    <EditButton
+                      onClick={() =>
+                        navigate(`/tags/${tag.tagId}/edit`, { state: { from: location.pathname } })
+                      }
+                    />
+                    <DeleteButton
+                      onClick={() =>
+                        navigate(`/tags/${tag.tagId}/delete`, {
+                          state: { from: location.pathname },
+                        })
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
