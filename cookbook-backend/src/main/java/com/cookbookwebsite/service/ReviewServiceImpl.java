@@ -8,8 +8,11 @@ import com.cookbookwebsite.model.User;
 import com.cookbookwebsite.repository.RecipeRepository;
 import com.cookbookwebsite.repository.ReviewRepository;
 import com.cookbookwebsite.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -74,24 +77,34 @@ public class ReviewServiceImpl implements ReviewService {
     // Create a review
     @Override
     public ReviewDTO createReview(ReviewCreateDTO dto, Integer userId) {
-        Review review = new Review();
+        // Validate inputs
+        if (dto.getScore() == null || dto.getScore() < 1 || dto.getScore() > 5) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Score must be between 1 and 5.");
+        }
 
-        // Assuming you have User and Recipe objects to set
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        var recipe = recipeRepository.findById(dto.getRecipeId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
 
-        Recipe recipe = recipeRepository.findById(dto.getRecipeId())
-                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+        // App-level guard (friendly error)
+        if (reviewRepository.existsByUser_UserIdAndRecipe_RecipeId(user.getUserId(), recipe.getRecipeId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "You’ve already reviewed this recipe.");
+        }
 
+        var review = new Review();
         review.setUser(user);
         review.setRecipe(recipe);
         review.setScore(dto.getScore());
-        review.setReviewText(dto.getReviewText());
+        review.setReviewText(dto.getReviewText() == null ? null : dto.getReviewText().trim());
 
-        Review saved = reviewRepository.save(review);
-
-        // Manually create ReviewDTO to return
-        return new ReviewDTO(saved);
+        try {
+            var saved = reviewRepository.save(review);
+            return new ReviewDTO(saved);
+        } catch (DataIntegrityViolationException ex) {
+            // Safety net in case two requests race or only the DB constraint catches it
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "You’ve already reviewed this recipe.");
+        }
     }
 
 

@@ -3,8 +3,11 @@ package com.cookbookwebsite.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "reviews")
-public class Review {
+@Table(
+        name = "reviews",
+        uniqueConstraints = @UniqueConstraint(name = "ux_reviews_user_recipe",
+                columnNames = {"user_id", "recipe_id"})
+)public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
