@@ -242,10 +242,10 @@ export default function RecipeForm({ initialValues, submitLabel = 'Save', onSubm
                   className="quantity-input"
                   id={`qty-${row.key}`}
                   name="ingredientQuantity"
-                  placeholder="e.g., 2.5"
+                  placeholder="e.g., 1/2, 1/4"
                   value={row.quantity ?? ''}
                   onChange={(e) => updateRow(row.key, { quantity: e.target.value })}
-                  inputMode="decimal"
+                  inputMode="text"
                 />
               </div>
 

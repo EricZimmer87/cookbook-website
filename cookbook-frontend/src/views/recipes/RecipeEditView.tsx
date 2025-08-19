@@ -51,7 +51,7 @@ function RecipeEditView() {
       .filter((r) => r.ingredientId)
       .map((r) => ({
         ingredientId: r.ingredientId!,
-        quantity: r.quantity && r.quantity.trim() !== '' ? Number(r.quantity) : null,
+        quantity: r.quantity && r.quantity.trim() !== '' ? r.quantity.trim() : null,
         unit: r.unit && r.unit.trim() !== '' ? r.unit.trim() : null,
         isOptional: !!r.isOptional,
       }));
