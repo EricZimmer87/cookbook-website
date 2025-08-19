@@ -55,7 +55,7 @@ function RecipeCard({ recipe, clickable = false, canDelete = false, onDelete }: 
       <ul>
         {recipe.recipeIngredients?.map((ingredient) => (
           <li key={ingredient.ingredientId}>
-            {ingredient.quantity} {ingredient.unit} {ingredient.ingredientName}
+            {ingredient.ingredientName}, {ingredient.quantity} {ingredient.unit}
           </li>
         ))}
       </ul>
