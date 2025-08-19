@@ -2,7 +2,7 @@ package com.cookbookwebsite.dto.recipe;
 
 public record IngredientRow(
         Integer ingredientId,
-        Double quantity,
+        String quantity,
         String unit,
         Boolean isOptional
 ) {}

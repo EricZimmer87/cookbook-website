@@ -2,10 +2,12 @@ package com.cookbookwebsite.dto.recipeingredient;
 
 import com.cookbookwebsite.model.RecipeIngredient;
 
+import java.math.BigDecimal;
+
 public class RecipeIngredientDTO {
     private Integer recipeId;
     private Integer ingredientId;
-    private Double quantity;
+    private BigDecimal quantity;
     private String unit;
     private String recipeName;
     private String ingredientName;
@@ -24,7 +26,7 @@ public class RecipeIngredientDTO {
     // Getters
     public Integer getRecipeId() { return recipeId; }
     public Integer getIngredientId() { return ingredientId; }
-    public Double getQuantity() { return quantity; }
+    public BigDecimal getQuantity() { return quantity; }
     public String getUnit() { return unit; }
     public String getRecipeName() { return recipeName; }
     public String getIngredientName() { return ingredientName; }

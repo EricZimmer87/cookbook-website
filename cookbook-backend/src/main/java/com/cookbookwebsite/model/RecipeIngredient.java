@@ -2,6 +2,8 @@ package com.cookbookwebsite.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "recipe_ingredients")
 public class RecipeIngredient {
@@ -19,7 +21,7 @@ public class RecipeIngredient {
     private Ingredient ingredient;
 
     @Column(name = "quantity")
-    private Double quantity;
+    private BigDecimal quantity;
 
     @Column(name = "unit")
     private String unit;
@@ -29,7 +31,7 @@ public class RecipeIngredient {
 
     public RecipeIngredient() {}
 
-    public RecipeIngredient(Recipe recipe, Ingredient ingredient, Double quantity, String unit, Boolean isOptional) {
+    public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal quantity, String unit, Boolean isOptional) {
         this.recipe = recipe;
         this.ingredient = ingredient;
         this.quantity = quantity;
@@ -54,8 +56,8 @@ public class RecipeIngredient {
         this.ingredient = ingredient;
     }
 
-    public Double getQuantity() { return quantity; }
-    public void setQuantity(Double quantity) {
+    public BigDecimal getQuantity() { return quantity; }
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
