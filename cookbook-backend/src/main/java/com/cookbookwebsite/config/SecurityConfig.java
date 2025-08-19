@@ -20,38 +20,32 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    // This bean allows Spring to hash and verify passwords with BCrypt.
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Disables CSRF protection. CSRF isn’t needed in stateless APIs (like ones using JWTs).
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             JwtAuthFilter jwtAuthFilter,
             UserRepository userRepository) throws Exception {
+
         var bannedUserFilter = new BannedUserFilter(userRepository);
+
         http
+                // Only match /api/** — static assets and SPA routes bypass security entirely
+                .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults()) // uses dev-only CorsConfigurationSource
                 .authorizeHttpRequests(auth -> auth
+                        // public API endpoints
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // Recipes
-                        .requestMatchers("/api/recipes").permitAll()
-                        .requestMatchers("/api/recipes/*").permitAll()
-
-                        // Reviews
+                        .requestMatchers("/api/password-reset/**", "/api/test-mail/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/recipe/**").permitAll()
-
-                        // Mail
-                        .requestMatchers("/api/password-reset/**").permitAll()
-                        .requestMatchers("/api/test-mail/**").permitAll()
-
-                        // Everything else default
+                        .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                        // everything else under /api/** requires auth
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -60,3 +54,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
