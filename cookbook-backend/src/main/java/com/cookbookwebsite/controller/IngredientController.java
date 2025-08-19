@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
-@PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
 public class IngredientController {
     private final IngredientService ingredientService;
 
@@ -33,6 +32,7 @@ public class IngredientController {
 
     // Update ingredient
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     public IngredientDTO updateIngredient(@PathVariable Integer id, @RequestBody Ingredient updatedIngredient) {
         Ingredient ingredient = ingredientService.getIngredientEntityById(id);
 
@@ -46,6 +46,7 @@ public class IngredientController {
 
     // Create ingredient
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     public Ingredient createIngredient(@RequestBody Ingredient ingredient) {
         return ingredientService.createIngredient(ingredient);
     }
