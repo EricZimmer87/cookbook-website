@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                         .requestMatchers("/api/password-reset/**", "/api/test-mail/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/recipe/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                         // everything else under /api/** requires auth
                         .anyRequest().authenticated()
