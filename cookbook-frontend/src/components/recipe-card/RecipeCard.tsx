@@ -50,6 +50,9 @@ function RecipeCard({ recipe, clickable = false, canDelete = false, onDelete }: 
     >
       <div className="recipe-card__header">
         <h3 className="recipe-card__title">{recipe.recipeName}</h3>
+        <p>
+          <small>Uploaded by {recipe.userName}</small>
+        </p>
       </div>
 
       <ul>
