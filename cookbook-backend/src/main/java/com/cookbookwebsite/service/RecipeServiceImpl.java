@@ -11,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -35,7 +33,7 @@ public class RecipeServiceImpl implements RecipeService {
                              CategoryRepository categoryRepository,
                              DifficultyLevelRepository difficultyLevelRepository,
                              IngredientRepository ingredientRepository,
-                             RecipeIngredientRepository recipeIngredientRepository, // ← comma, not semicolon
+                             RecipeIngredientRepository recipeIngredientRepository,
                              TagRepository tagRepository,
                              RecipeTagRepository recipeTagRepository,
                              ReviewRepository reviewRepository,
@@ -52,40 +50,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.reviewRepository = reviewRepository;
         this.userNoteRepository = userNoteRepository;
         this.userFavoriteRepository = userFavoriteRepository;
-    }
-
-    private BigDecimal parseQuantity(String input) {
-        if (input == null || input.isBlank()) return null;
-        // normalize
-        String s = input.trim()
-                .replace("−","-")
-                .replace("½","1/2").replace("⅓","1/3").replace("⅔","2/3")
-                .replace("¼","1/4").replace("¾","3/4")
-                .replace("⅕","1/5").replace("⅖","2/5").replace("⅗","3/5").replace("⅘","4/5")
-                .replace("⅙","1/6").replace("⅚","5/6")
-                .replace("⅛","1/8").replace("⅜","3/8").replace("⅝","5/8").replace("⅞","7/8")
-                .replaceAll("(\\d)\\s*-\\s*(\\d)", "$1 $2"); // 3-1/2 -> 3 1/2
-
-        // plain number (e.g., 0.5)
-        if (s.matches("^[+-]?\\d+(\\.\\d+)?$")) return new BigDecimal(s).setScale(2, RoundingMode.HALF_UP);
-
-        // mixed number "a b/c"
-        var m1 = s.trim().split("\\s+");
-        if (m1.length == 2 && m1[0].matches("[+-]?\\d+") && m1[1].matches("\\d+/\\d+")) {
-            String[] f = m1[1].split("/");
-            return new BigDecimal(m1[0])
-                    .add(new BigDecimal(f[0]).divide(new BigDecimal(f[1]), 6, RoundingMode.HALF_UP))
-                    .setScale(2, RoundingMode.HALF_UP);
-        }
-
-        // simple fraction "b/c"
-        if (s.matches("^[+-]?\\d+\\s*/\\s*\\d+$")) {
-            String[] f = s.replace(" ","").split("/");
-            return new BigDecimal(f[0]).divide(new BigDecimal(f[1]), 6, RoundingMode.HALF_UP)
-                    .setScale(2, RoundingMode.HALF_UP);
-        }
-
-        throw new IllegalArgumentException("Invalid quantity: " + input);
     }
 
     @Override
@@ -131,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setRecipeName(req.recipeName().trim());
         recipe.setRecipeInstructions(req.recipeInstructions());
 
-        if (req.categoryId() == null)  throw new IllegalStateException("Category is required");
+        if (req.categoryId() == null) throw new IllegalStateException("Category is required");
         if (req.difficultyId() == null) throw new IllegalStateException("Difficulty is required");
 
         var cat = categoryRepository.findById(req.categoryId())
@@ -168,7 +132,7 @@ public class RecipeServiceImpl implements RecipeService {
             var toSave = rows.stream().map(r -> new RecipeIngredient(
                     savedRecipe,
                     ingMap.get(r.ingredientId()),
-                    r.quantity() == null ? null : parseQuantity(r.quantity()),
+                    (r.quantity() == null || r.quantity().isBlank()) ? null : r.quantity().trim(),
                     (r.unit() == null ? null : r.unit().trim()),
                     r.isOptional() != null ? r.isOptional() : Boolean.FALSE
             )).toList();
@@ -198,7 +162,6 @@ public class RecipeServiceImpl implements RecipeService {
         return savedRecipe;
     }
 
-    // service/RecipeServiceImpl.java
     @Override
     @Transactional
     public RecipeDTO updateRecipeForCurrentUser(Integer recipeId, RecipeUpdateRequest req) {
@@ -215,7 +178,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new org.springframework.security.access.AccessDeniedException("Forbidden");
         }
 
-        // Validate required fields (since DB schema requires them)
+        // Validate required fields
         if (req.recipeName() == null || req.recipeName().isBlank())
             throw new IllegalStateException("Recipe name is required");
         if (req.recipeInstructions() == null || req.recipeInstructions().isBlank())
@@ -260,7 +223,7 @@ public class RecipeServiceImpl implements RecipeService {
                 var ri = new RecipeIngredient(
                         recipe,
                         ing,
-                        r.quantity() == null ? null : parseQuantity(r.quantity()),
+                        (r.quantity() == null || r.quantity().isBlank()) ? null : r.quantity().trim(),
                         r.unit() == null ? null : r.unit().trim(),
                         r.isOptional() != null ? r.isOptional() : Boolean.FALSE
                 );
@@ -284,7 +247,6 @@ public class RecipeServiceImpl implements RecipeService {
             recipeTagRepository.saveAll(rtList);
         }
 
-        // Return updated view
         return new RecipeDTO(recipe);
     }
 
@@ -302,7 +264,6 @@ public class RecipeServiceImpl implements RecipeService {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         if (!isOwner && !isAdmin) {
-            // Spring will turn this into 403 automatically
             throw new org.springframework.security.access.AccessDeniedException("Forbidden");
         }
 

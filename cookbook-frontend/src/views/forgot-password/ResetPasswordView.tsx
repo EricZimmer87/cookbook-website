@@ -67,17 +67,19 @@ function ResetPasswordView() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <h2>Reset Password</h2>
-      <input
-        type="password"
-        placeholder="New Password"
-        {...register('newPassword', {
-          required: 'Password is required',
-          minLength: {
-            value: 6,
-            message: 'Password must be at least 6 characters long',
-          },
-        })}
-      />
+      <div className="form-group">
+        <input
+          type="password"
+          placeholder="New Password"
+          {...register('newPassword', {
+            required: 'Password is required',
+            minLength: {
+              value: 6,
+              message: 'Password must be at least 6 characters long',
+            },
+          })}
+        />
+      </div>
       {errors.newPassword && <p className="error">{errors.newPassword.message}</p>}
 
       <button type="submit" disabled={isSubmitting} className="button button-blue">

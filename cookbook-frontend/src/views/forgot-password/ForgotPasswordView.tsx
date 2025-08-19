@@ -41,11 +41,13 @@ function ForgotPasswordView() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <h2>Forgot Password</h2>
-      <input
-        type="email"
-        placeholder="Enter your email"
-        {...register('email', { required: true })}
-      />
+      <div className="form-group">
+        <input
+          type="email"
+          placeholder="Enter your email"
+          {...register('email', { required: true })}
+        />
+      </div>
       <button type="submit" className="button button-blue" disabled={isButtonDisabled}>
         {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>

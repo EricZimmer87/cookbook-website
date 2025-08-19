@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public class RecipeIngredientDTO {
     private Integer recipeId;
     private Integer ingredientId;
-    private BigDecimal quantity;
+    private String quantity;
     private String unit;
     private String recipeName;
     private String ingredientName;
@@ -26,7 +26,7 @@ public class RecipeIngredientDTO {
     // Getters
     public Integer getRecipeId() { return recipeId; }
     public Integer getIngredientId() { return ingredientId; }
-    public BigDecimal getQuantity() { return quantity; }
+    public String getQuantity() { return quantity; }
     public String getUnit() { return unit; }
     public String getRecipeName() { return recipeName; }
     public String getIngredientName() { return ingredientName; }

@@ -21,7 +21,7 @@ public class RecipeIngredient {
     private Ingredient ingredient;
 
     @Column(name = "quantity")
-    private BigDecimal quantity;
+    private String quantity;
 
     @Column(name = "unit")
     private String unit;
@@ -31,7 +31,7 @@ public class RecipeIngredient {
 
     public RecipeIngredient() {}
 
-    public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal quantity, String unit, Boolean isOptional) {
+    public RecipeIngredient(Recipe recipe, Ingredient ingredient, String quantity, String unit, Boolean isOptional) {
         this.recipe = recipe;
         this.ingredient = ingredient;
         this.quantity = quantity;
@@ -56,8 +56,8 @@ public class RecipeIngredient {
         this.ingredient = ingredient;
     }
 
-    public BigDecimal getQuantity() { return quantity; }
-    public void setQuantity(BigDecimal quantity) {
+    public String getQuantity() { return quantity; }
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
