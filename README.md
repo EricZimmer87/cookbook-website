@@ -36,6 +36,21 @@ cookbook-website/
 
 ## Screenshots
 
+**Homepage**
+![Homepage Screenshot](docs/screenshots/Home.png)
+
+**Recipe List**
+![Recipe List Screenshot](docs/screenshots/Recipes.png)
+
+**Recipe Details**
+![Recipe Details Screenshot](docs/screenshots/RecipeDetails.png)
+
+**User Profile**
+![User Profile Screenshot](docs/screenshots/Profile.png)
+
+**Login**
+![Login Screenshot](docs/screenshots/Login.png)
+
 ## Deployment
 
 The app is deployed by bundling the React frontend into the Spring Boot backend and hosting on **Render**.
