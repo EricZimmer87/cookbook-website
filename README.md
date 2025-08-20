@@ -66,3 +66,7 @@ The MySQL database is hosted on **Clever Cloud**.
 - [MySQL](https://www.mysql.com/)
 - [Docker](https://www.docker.com/)
 - Inspired by classic recipe-sharing platforms
+
+## Documentation
+
+- For technical notes on architecture and design decisions, see [DEVELOPER.md](DEVELOPER.md).
