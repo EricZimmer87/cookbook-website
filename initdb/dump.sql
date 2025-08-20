@@ -170,7 +170,6 @@ CREATE TABLE `recipes` (
   `user_id` int NOT NULL,
   `recipe_instructions` text NOT NULL,
   `recipe_name` varchar(255) NOT NULL,
-  `recipe_image` varchar(255) DEFAULT NULL,
   `ingredients_notes` text,
   PRIMARY KEY (`recipe_id`),
   KEY `category_id` (`category_id`),

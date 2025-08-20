@@ -1,7 +1,0 @@
-#Users
-  - Users link only for admin.
-  - All users APIs are admin only
-
-# Recipes
-  - Add recipe: admin and contributor
-  - Delete recipe: admin and creator of recipe
