@@ -1,5 +1,7 @@
 # Cookbook Website (Cooking Made EZ)
 
+[Live Demo](https://cookbook-website.onrender.com/)
+
 This is a full-stack web application for discovering, creating, and sharing recipes. It is built with **React**, **Spring Boot**, and **MySQL**. Docker was used for development. This is my first application built with React and Spring Boot. It was used as a learning experience for the two frameworks.
 
 ## Features
@@ -16,7 +18,7 @@ This is a full-stack web application for discovering, creating, and sharing reci
   - Make notes about recipes for personal changes you made
   - Save recipes to favorites
 
-## 📂 File Structure
+## File Structure
 
 ```text
 cookbook-website/
